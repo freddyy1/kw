@@ -1,236 +1,337 @@
-class ekwipunekMenager {
-    constructor() {
-        const otwieranieKart = new cardOpen();
-        const mapWrapper = new locationWrapper();
-        this.setupCalculatePA();
-    }
+niech lastTimestamp = Date.now();
+niech isRunning = false;
+niech refreshInterval;
 
-    setupCalculatePA() {
-        const ekwipunekButton = document.querySelector('button.select_page[data-page="game_ekw"]');
+funkcja checkRefresh() {
+    const currentTimestamp = Date.now();
 
-        if (ekwipunekButton) {
-            ekwipunekButton.addEventListener('click', () => {
-                console.log("Przycisk Ekwipunek kliknięty.");
-                this.createOrUpdatePADisplay();
-            });
-        } else {
-            console.error("Nie znaleziono przycisku Ekwipunek!");
-        }
-    }
+    jeśli (bieżący znacznik czasu - ostatni znacznik czasu > 15000 && isRunning) {
+        ostatni znacznik czasu = bieżący znacznik czasu;
 
-    createOrUpdatePADisplay() {
-        const titleDiv = document.querySelector("#page_game_ekw > div.title");
-        if (!titleDiv) return;
+        const linkElement = document.querySelector('.qlink.load_afo');
+        jeśli (element_linku) {
+            linkElement.click();
+            isRunning = fałsz;
 
-        let paDiv = document.getElementById("pa_display");
-
-        if (!paDiv) {
-            paDiv = document.createElement("div");
-            paDiv.id = "pa_display";
-            paDiv.innerText = `POSIADANE PA: OBLICZ`;
-            paDiv.style.display = "inline-block";
-            paDiv.style.color = "lightblue";
-            paDiv.style.fontSize = "16px";
-            paDiv.style.fontWeight = "bold";
-            paDiv.style.cursor = "pointer";
-            paDiv.style.position = "relative";
-            paDiv.style.left = "40%";
-            titleDiv.appendChild(paDiv);
-            paDiv.addEventListener("click", () => {
-                console.log("Obliczanie PA rozpoczęte...");
-                new calculatePA();
-            });
+			ustawCzasOkres(() => {
+				const selectedOption = document.getElementById('actionSelect').value;
+				przełącznik (selectedOption) {
+					sprawa 'Kody':
+						// Akcje związane z kodem
+						wykonajAkcjeKodu();
+						przerwa;
+					sprawa 'PVP':
+						// Akcje związane z PVP
+						wykonaj AkcjePvp()
+							.następnie(() => {
+								zwróć arenaAndAbyss();
+							});
+						przerwa;
+					przypadek 'PVM':
+						// Działania związane z PVM
+						wykonajPvmActions();
+						przerwa;
+					przypadek 'Listy':
+						// Wyświetl listę powiązanych działań
+						wykonajListActions();
+						przerwa;
+					sprawa 'Wyprawy':
+						autoekspedycje();
+						przerwa;                                     
+					sprawa 'Zbierajka':
+						// Inne powiązane działania
+						wykonajInneAkcje();
+						przerwa;			
+					domyślny:
+						przerwa;
+				}
+			(2000);
         }
     }
 }
 
-class cardOpen {
-    constructor() {
-        $("body").on("click", '#ekw_page_items div[data-base_item_id="1784"]', () => {
-            $("#ekw_menu_use").one("click", () => { 
-                setTimeout(() => {
-                    $(`<button class="btn_small_gold otwieranie_kart" style="margin-right:4ch;">X100 OPEN</button>`).insertBefore("#kom_con > div > div.content > div:nth-child(1) > button.option.btn_small_gold");
-                }, 500);
-            });
-        });
-        $("body").on("click", '.otwieranie_kart', () => {
-            let upperLimit = parseInt(document.querySelector("#item_am").value, 10);
-            if (!isNaN(upperLimit) && upperLimit > 0) {
-                for (let i = 0; i < upperLimit; i++) {
-                    setTimeout(() => {
-                        let cards = $(`#ekw_page_items div[data-base_item_id="1784"]`);
-                        let cards_id = parseInt(cards.attr("data-item_id"));
-                        GAME.socket.emit('ga',{a: 12, type: 14, iid: cards_id, page: GAME.ekw_page, page2: GAME.ekw_page2, am: '100'});
-                    }, i * 2000);
-                }
-            } else {
-                console.error("Wartość #item_am nie jest poprawną liczbą lub jest mniejsza niż 1.");
+funkcja toggleScript() {
+    jestUruchomiony = !jestUruchomiony;
+
+    jeśli (jestUruchomione) {
+        window.localStorage.setItem('isRunning', 'true');
+        odświeżInterwał = ustawInterwał(() => {
+            sprawdźOdśwież();
+        }, 1000);
+
+    } w przeciwnym razie {
+        window.localStorage.setItem('isRunning', 'false');
+        clearInterval(odświeżInterwał);
+    }
+
+    zaktualizujTekstPrzycisku();
+}
+
+funkcja updateButtonText() {
+    const controlButton = document.getElementById('toggleButton');
+    jeśli (przycisk_kontrolny) {
+        controlButton.textContent = isRunning ? 'Odśwież Afo Stop' : 'Odśwież Afo Start';
+    }
+}
+
+funkcja createControlButton() {
+    const controlButton = document.createElement('button');
+    controlButton.id = 'toggleButton';
+    controlButton.textContent = isRunning ? 'Odśwież Afo Stop' : 'Odśwież Afo Start';
+    controlButton.style.position = 'stały';
+    controlButton.style.top = '36px';
+    przycisk_kontroli.style.prawy = '10px';
+    controlButton.style.background = '#333';
+    controlButton.style.zIndex = '9999';
+    controlButton.style.width = '150px';
+    controlButton.style.padding = '1px';
+    controlButton.style.borderRadius = '5px';
+    controlButton.style.borderStyle = 'solid';
+    controlButton.style.borderWidth = '5px 6px 5px 6px';
+    controlButton.style.display = 'blok';
+    controlButton.style.userSelect = 'brak';
+    controlButton.style.color = 'złoty';
+    controlButton.style.borderColor = 'rgba(0,0,0,0.9)';
+    controlButton.addEventListener('kliknij', () => {
+        przełączScript();
+    });
+    dokument.body.appendChild(controlButton);
+
+    const selectContainer = document.createElement('div');
+    selectContainer.style.position = 'stały';
+    wybierzKontener.style.top = '73px';
+    selectContainer.style.right = '10px';
+    wybierzContainer.style.background = '#333';
+    selectContainer.style.zIndex = '9999';
+    selectContainer.style.width = '150px';
+    selectContainer.style.padding = '1px';
+    selectContainer.style.borderRadius = '5px';
+    selectContainer.style.borderStyle = 'solid';
+    selectContainer.style.borderWidth = '5px 6px 5px 6px';
+    selectContainer.style.display = 'blok';
+    selectContainer.style.userSelect = 'brak';
+    wybierzContainer.style.color = 'rgba(0,0,0,0.9)';
+
+    const actionSelect = document.createElement('select');
+    actionSelect.id = 'actionSelect';
+    actionSelect.style.color = 'gold'; // Ustaw początkowy kolor czcionki na złoty
+    actionSelect.style.background = '#333333';
+    actionSelect.style.border = 'brak';
+    actionSelect.style.width = '100%';
+    actionSelect.style.height = '100%';
+    actionSelect.style.padding = '5px';
+    actionSelect.style.fontSize = '12px';
+    actionSelect.style.fontWeight = 'pogrubiony';
+
+    // Pobierz wybraną opcję z pamięci lokalnej, jeśli jest dostępna
+    const savedOption = window.localStorage.getItem('selectedOption');
+
+    // Dodanie nasłuchiwacza zdarzeń w celu zmiany koloru wybranej opcji
+    actionSelect.addEventListener('change', funkcja() {
+        const selectedOption = this.options[this.selectedIndex];
+        selectedOption.style.color = 'złoty';
+        dla (let i = 0; i < this.options.length; i++) {
+            jeśli (i !== this.selectedIndex) {
+                this.options[i].style.color = 'biały';
             }
-        });     
+        }
+        // Zapisz wybraną opcję w pamięci lokalnej
+        window.localStorage.setItem('selectedOption', selectedOption.value);
+    });
+
+    const opcje = ['Kody', 'PVP', 'PVM', 'Listy', 'Wyprawy', 'Zbierajka'];
+    opcje.forEach(opcja => {
+        const optionElement = document.createElement('opcja');
+        optionElement.value = opcja;
+        optionElement.textContent = opcja;
+        // Ustaw wybrany atrybut, jeśli opcja pasuje do opcji zapisanej w pamięci lokalnej
+        jeśli (zapisana opcja === opcja) {
+            optionElement.selected = prawda;
+            optionElement.style.color = 'gold'; // Ustaw kolor czcionki na złoty dla zapisanej opcji
+        }
+        actionSelect.appendChild(element opcji);
+    });
+
+    selectContainer.appendChild(actionSelect);
+    dokument.body.appendChild(selectContainer);
+}
+
+funkcja performCodeActions() {
+    niech ghButtonElement = document.querySelector('.gh_button.gh_code');
+    niech codeButtonElement = document.querySelector('.code_button.code_code');
+    niech codeButtonAccElement = document.querySelector('.code_button.code_acc');
+    niech codeButtonSubElement = document.querySelector('.code_button.code_zast');
+    jeśli (ghButtonElement && codeButtonElement) {
+        ustawCzasOkres(() => {
+            ghButtonElement.click();
+            ustawCzasOkres(() => {
+                codeButtonElement.click();
+                ustawCzasOkres(() => {
+                    codeButtonAccElement.click();
+                    ustawCzasOkres(() => {
+                        codeButtonSubElement.click();
+                   (2000);
+                (2000);
+            (2000);
+        (2000);
     }
 }
 
-class calculatePA {
-    constructor() {
-        this.calculateFinalNumber().catch(error => {
-            console.error("Błąd podczas obliczania PA:", error);
-        });
-    }
-
-    async calculateFinalNumber() {
-        const initialPA = parseInt(document.querySelector("#char_pa_max").innerText.replace(/\s+/g, ''), 10);
-        let finalNumber = initialPA;
-
-        const itemStacks = await this.getItemStacks([1244, 1242, 1259, 1473, 1260, 1472, 1243, 1471, 1494, 1493, 1492, 1489, 1485, 1484, 1483]);
-
-        finalNumber += itemStacks[1244] * 100;
-        finalNumber += itemStacks[1242] * 2000;
-        finalNumber += itemStacks[1259] * 5000 + (initialPA * 0.03);
-        finalNumber += itemStacks[1473] * 5000 + (initialPA * 0.03);
-        finalNumber += itemStacks[1260] * 10000 + (initialPA * 0.15);
-        finalNumber += itemStacks[1472] * 10000 + (initialPA * 0.15);
-        finalNumber += itemStacks[1243] * initialPA;
-        finalNumber += itemStacks[1471] * initialPA;
-        finalNumber += (itemStacks[1489] * 5000 + (initialPA * 0.03)) * 20;
-        finalNumber += (itemStacks[1489] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1494] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1493] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1492] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1485] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1483] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1484] * 10000 + (initialPA * 0.15)) * 3;
-        finalNumber += (itemStacks[1484] * initialPA) * 4;
-
-        this.updatePA(GAME.dots(finalNumber));
-        console.log("MAX PA:" + initialPA + " Łączna ilość:" + finalNumber);
-    }
-
-    async getItemStacks(itemIds) {
-        const stacks = {};
-        itemIds.forEach(id => stacks[id] = 0);
-        const pages = [
-            { page: 0, page2: 0 },
-            { page: 0, page2: 1 },
-            { page: 0, page2: 2 }
-        ];
-        for (let page of pages) {
-            await GAME.socket.emit('ga', { a: 12, page: page.page, page2: page.page2, used: 1 });
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            itemIds.forEach(itemId => {
-                const itemElement = document.querySelector(`#ekw_page_items [data-base_item_id="${itemId}"]`);
-                if (itemElement) {
-                    const stack = parseInt(itemElement.getAttribute('data-stack'), 10) || 0;
-                    stacks[itemId] += stack;
-                }
-            });
+funkcja performPvpActions() {
+    zwróć nową obietnicę((rozwiąż, odrzuć) => {
+        niech ghButtonElement = document.querySelector('.gh_button.gh_pvp');
+        niech codeButtonElement = document.querySelector('.pvp_button.pvp_pvp');
+        jeśli (ghButtonElement && codeButtonElement) {
+            ustawCzasOkres(() => {
+                GRA.page_switch('mapa_gry');
+                ustawCzasOkres(() => {
+                    ghButtonElement.click();
+                    ustawCzasOkres(() => {
+                        codeButtonElement.click();
+                        rozstrzygać();
+                    (2000);
+                }, 1000);
+            (2000);
+        } w przeciwnym razie {
+            reject(new Error('Nie znaleziono jednego lub obu przycisków'));
         }
-        console.log(stacks);
-        return stacks;
-    }
-
-    updatePA(finalNumber) {
-        const paDiv = document.getElementById("pa_display");
-        if (paDiv) {
-            paDiv.innerText = `POSIADANE PA: ${finalNumber}`;
-        }
-    }
+    });
 }
 
-class locationWrapper {
-    constructor() {
-        this.locationsGathered = false;
-        $("body").on("click", '#map_link_btn', () => {
-            if ($("#changeLocationWrapper").length === 0) {
-                let locationWrapperCSS = `
-                #changeLocationWrapper {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 15px;
-                    margin-top: -50px;
-                    position: relative; /* Pozycjonowanie względne */
-                    z-index: 10; /* Wyższy z-index, aby kontener był nad innymi elementami */
-                }
-                #changeLocationWrapper .arrow {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(135deg, rgb(36 210 210 / 80%), rgb(46 215 215 / 10%));
-                    color: white;
-                    font-size: 20px;
-                    font-weight: bold;
-                    border: none;
-                    border-radius: 50%;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                    cursor: pointer;
-                    transition: transform 0.2s, box-shadow 0.2s;
-                    position: relative; /* Pozycjonowanie względne */
-                    z-index: 20; /* Zwiększamy z-index, aby strzałki były na wierzchu */
-                }
-                #changeLocationWrapper .arrow:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-                }
-                #changeLocationText {
-                    font-size: 18px;
-                    color: rgb(36 210 210 / 80%);
-                    font-weight: bold;
-                    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-                    white-space: nowrap; /* Zapobiega zawijaniu tekstu */
-                }`;
-                let locationWrapperHTML = `
-                <div id="changeLocationWrapper">
-                    <button id="leftArrow" class="arrow">← </button>
-                    <span id="changeLocationText" class="green"> ZMIEŃ LOKACJĘ </span>
-                    <button id="rightArrow" class="arrow"> →</button>
-                </div>`;
-
-                $('#map_y').after(`<style>${locationWrapperCSS}</style>${locationWrapperHTML}`);
+funkcja arenaAndAbyss() {
+    zwróć nową obietnicę((rozwiąż, odrzuć) => {
+        ustawTimeout(funkcja() {
+            przycisk var = document.querySelector('.qlink.manage_auto_arena');
+            jeśli (przycisk) {
+                przycisk.kliknij();
+                ustawTimeout(funkcja() {
+                    var abyssButton = document.querySelector('.qlink.manage_auto_abyss');
+                    jeśli (przycisk otchłani) {
+                        abyssButton.click();
+                        rozstrzygać();
+                    } w przeciwnym razie {
+                        odrzuć(nowy Błąd('Nie znaleziono przycisku Otchłań'));
+                    }
+                }, 700);
+            } w przeciwnym razie {
+                odrzuć(nowy Błąd('Nie znaleziono przycisku Areny'));
             }
-            if (!this.locationsGathered) {
-                this.locationsGathered = true;
-                setTimeout(() => {
-                    GAME.emitOrder({a: 19, type: 1});
-                    setTimeout(() => {document.querySelector("#map_link_btn").click();}, 1000);
-                    setTimeout(() => {
-                        const dataLocArray = [];
-                        const list = document.querySelector('#tp_list');
-                        if (list) {
-                            const items = list.querySelectorAll("[data-loc]");
-                            items.forEach(item => {
-                                const dataLocValue = item.getAttribute("data-loc");
-                                if (dataLocValue && /^\d{1,4}$/.test(dataLocValue)) {
-                                    dataLocArray.push(dataLocValue);
-                                }
-                            });
-                            console.log("Zebrane lokalizacje:", dataLocArray);
-                        } else {
-                            console.error("Element o ID #tp_list nie został znaleziony.");
-                        }
-                        $('#rightArrow').on('click', function() {
-                            const currentLoc = String(GAME.char_data.loc);
-                            const currentIndex = dataLocArray.indexOf(currentLoc);
-                            if (currentIndex === -1) {
-                                console.error("BRAK");
-                            } else if (currentIndex > 0) {
-                                const previousLoc = dataLocArray[currentIndex - 1];
-                                GAME.emitOrder({a: 12, type: 18, loc: previousLoc});
-                            }
+        }, 1500);
+    });
+}
+
+
+
+funkcja selectSavedSpawners() {
+    const selectedSpawners = JSON.parse(localStorage.getItem('selectedSpawners')) || [];
+    niech indeks = 0;
+    const intervalId = ustawInterwał(() => {
+        jeśli (indeks >= selectedSpawners.length) {
+            clearInterval(interwałId);
+            powrót;
+        }
+        const spawnerId = selectedSpawners[indeks];
+        const spawner = document.getElementById(spawnerId);
+        jeśli (spawner) {
+            spawner.click();
+        }
+        indeks++;
+    }, 800);
+}
+
+funkcja saveSelectedSpawners() {
+    const wybraneSpawners = [];
+    const spawners = document.querySelectorAll('[id^="kws_spawner_ignore_"]');
+    spawners.forEach(spawner => {
+        jeśli (spawner.checked) {
+            selectedSpawners.push(spawner.id);
+        }
+    });
+    localStorage.setItem('selectedSpawners', JSON.stringify(selectedSpawners));
+}
+
+funkcja performPvmActions() {
+    const ghRespButton = document.querySelector('.gh_button.gh_resp');
+    jeśli (ghRespButton) {
+        ustawCzasOkres(() => {
+            ghRespButton.click();
+            ustawCzasOkres(() => {
+                const respButton = document.querySelector('.resp_button.resp_resp');
+                jeśli (przycisk odpowiedzi) {
+                    GRA.page_switch('mapa_gry');
+                    ustawCzasOkres(() => {
+                        respButton.click();
+                        wybierzZapisaneSpawnery();
+                        const spawners = document.querySelectorAll('[id^="kws_spawner_ignore_"]');
+                        spawners.forEach(spawner => {
+                            spawner.addEventListener('change', saveSelectedSpawners);
                         });
-                        $('#leftArrow').on('click', function() {
-                            const currentLoc = String(GAME.char_data.loc);
-                            const currentIndex = dataLocArray.indexOf(currentLoc);
-                            if (currentIndex === -1) {
-                                console.error("BRAK");
-                            } else if (currentIndex < dataLocArray.length - 1) {
-                                const nextLoc = dataLocArray[currentIndex + 1];
-                                GAME.emitOrder({a: 12, type: 18, loc: nextLoc});
+                    }, 2500);
+                }
+            }, 2500);
+        }, 2500);
+    }
+}
+funkcja autoekspedycje() {
+  ustawTimeout(funkcja() {
+    przycisk var = document.querySelector('.qlink.sideIcons.manage_autoExpeditions');
+    jeśli (przycisk) {
+      przycisk.kliknij();
+    }
+  }, 10000);
+}
+
+funkcja performListActions() {
+    const ghLpvmButton = document.querySelector('.gh_button.gh_lpvm');
+    jeśli (ghLpvmButton) {
+        ustawCzasOkres(() => {
+            ghLpvmButton.kliknij();
+            ustawCzasOkres(() => {
+                const lpvmUBotton = document.querySelector('.lpvm_button.lpvm_u');
+                jeśli (lpvmUBotton) {
+                    lpvmUBotton.click();
+                    ustawCzasOkres(() => {
+                        // Wykonaj GAME.page_switch('game_map');
+                        GRA.page_switch('mapa_gry');
+                        ustawCzasOkres(() => {
+                            const lpvmLpvmButton = document.querySelector('.lpvm_button.lpvm_lpvm');
+                            jeśli (lpvmLpvmButton) {
+                                lpvmLpvmButton.kliknij();
                             }
-                        });
-                    }, 1000);
-                }, 2000);
-            }
-        });
+                        (2000);
+                    (2000);
+                }
+            (2000);
+        (2000);
     }
 }
 
 
+
+
+
+funkcja performOtherActions() {
+    const ghResButton = document.querySelector('.gh_button.gh_res');
+    jeśli (ghResButton) {
+        ustawCzasOkres(() => {
+            ghResButton.click();
+            ustawCzasOkres(() => {
+                // Wykonaj GAME.page_switch('game_map');
+                GRA.page_switch('mapa_gry');
+                ustawCzasOkres(() => {
+                    const resButton = document.querySelector('.res_button.res_res');
+                    jeśli (przycisk) {
+                        resButton.click();
+                    }
+                (2000);
+            (2000);
+        (2000);
+    }
+}
+
+utwórzPrzyciskKontrolny();
+
+const runningStateFromStorage = window.localStorage.getItem('isRunning');
+jeśli (runningStateFromStorage === 'true') {
+    przełączScript();
+}
