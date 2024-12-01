@@ -1,220 +1,220 @@
-niech lastTimestamp = Date.now();
-niech isRunning = false;
-niech refreshInterval;
+let lastTimestamp = Date.now();
+let isRunning = false;
+let refreshInterval;
 
-funkcja checkRefresh() {
+function checkRefresh() {
     const currentTimestamp = Date.now();
 
-    jeśli (bieżący znacznik czasu - ostatni znacznik czasu > 15000 && isRunning) {
-        ostatni znacznik czasu = bieżący znacznik czasu;
+    if (currentTimestamp - lastTimestamp > 15000 && isRunning) {
+        lastTimestamp = currentTimestamp;
 
         const linkElement = document.querySelector('.qlink.load_afo');
-        jeśli (element_linku) {
+        if (linkElement) {
             linkElement.click();
-            isRunning = fałsz;
+            isRunning = false;
 
-			ustawCzasOkres(() => {
+			setTimeout(() => {
 				const selectedOption = document.getElementById('actionSelect').value;
-				przełącznik (selectedOption) {
-					sprawa 'Kody':
-						// Akcje związane z kodem
-						wykonajAkcjeKodu();
-						przerwa;
-					sprawa 'PVP':
-						// Akcje związane z PVP
-						wykonaj AkcjePvp()
-							.następnie(() => {
-								zwróć arenaAndAbyss();
+				switch (selectedOption) {
+					case 'Kody':
+						// Code related actions
+						performCodeActions();
+						break;
+					case 'PVP':
+						// PVP related actions
+						performPvpActions()
+							.then(() => {
+								return arenaAndAbyss();
 							});
-						przerwa;
-					przypadek 'PVM':
-						// Działania związane z PVM
-						wykonajPvmActions();
-						przerwa;
-					przypadek 'Listy':
-						// Wyświetl listę powiązanych działań
-						wykonajListActions();
-						przerwa;
-					sprawa 'Wyprawy':
-						autoekspedycje();
-						przerwa;                                     
-					sprawa 'Zbierajka':
-						// Inne powiązane działania
-						wykonajInneAkcje();
-						przerwa;			
-					domyślny:
-						przerwa;
+						break;
+					case 'PVM':
+						// PVM related actions
+						performPvmActions();
+						break;
+					case 'Listy':
+						// List related actions
+						performListActions();
+						break;
+					case 'Wyprawy':
+						autoexpeditions();
+						break;                                     
+					case 'Zbierajka':
+						// Other related actions
+						performOtherActions();
+						break;			
+					default:
+						break;
 				}
-			(2000);
+			}, 2000);
         }
     }
 }
 
-funkcja toggleScript() {
-    jestUruchomiony = !jestUruchomiony;
+function toggleScript() {
+    isRunning = !isRunning;
 
-    jeśli (jestUruchomione) {
+    if (isRunning) {
         window.localStorage.setItem('isRunning', 'true');
-        odświeżInterwał = ustawInterwał(() => {
-            sprawdźOdśwież();
+        refreshInterval = setInterval(() => {
+            checkRefresh();
         }, 1000);
 
-    } w przeciwnym razie {
+    } else {
         window.localStorage.setItem('isRunning', 'false');
-        clearInterval(odświeżInterwał);
+        clearInterval(refreshInterval);
     }
 
-    zaktualizujTekstPrzycisku();
+    updateButtonText();
 }
 
-funkcja updateButtonText() {
+function updateButtonText() {
     const controlButton = document.getElementById('toggleButton');
-    jeśli (przycisk_kontrolny) {
-        controlButton.textContent = isRunning ? 'Odśwież Afo Stop' : 'Odśwież Afo Start';
+    if (controlButton) {
+        controlButton.textContent = isRunning ? 'Refresh Afo Stop' : 'Refresh Afo Start';
     }
 }
 
-funkcja createControlButton() {
+function createControlButton() {
     const controlButton = document.createElement('button');
     controlButton.id = 'toggleButton';
-    controlButton.textContent = isRunning ? 'Odśwież Afo Stop' : 'Odśwież Afo Start';
-    controlButton.style.position = 'stały';
+    controlButton.textContent = isRunning ? 'Refresh Afo Stop' : 'Refresh Afo Start';
+    controlButton.style.position = 'fixed';
     controlButton.style.top = '36px';
-    przycisk_kontroli.style.prawy = '10px';
+    controlButton.style.right = '10px';
     controlButton.style.background = '#333';
     controlButton.style.zIndex = '9999';
-    controlButton.style.width = '150px';
+    controlButton.style.width = '150px'; 
     controlButton.style.padding = '1px';
     controlButton.style.borderRadius = '5px';
     controlButton.style.borderStyle = 'solid';
     controlButton.style.borderWidth = '5px 6px 5px 6px';
-    controlButton.style.display = 'blok';
-    controlButton.style.userSelect = 'brak';
-    controlButton.style.color = 'złoty';
-    controlButton.style.borderColor = 'rgba(0,0,0,0.9)';
-    controlButton.addEventListener('kliknij', () => {
-        przełączScript();
+    controlButton.style.display = 'block';
+    controlButton.style.userSelect = 'none';
+    controlButton.style.color = 'gold'; 
+    controlButton.style.borderColor = 'rgba(0,0,0,0.9)'; 
+    controlButton.addEventListener('click', () => {
+        toggleScript();
     });
-    dokument.body.appendChild(controlButton);
+    document.body.appendChild(controlButton);
 
     const selectContainer = document.createElement('div');
-    selectContainer.style.position = 'stały';
-    wybierzKontener.style.top = '73px';
+    selectContainer.style.position = 'fixed';
+    selectContainer.style.top = '73px';
     selectContainer.style.right = '10px';
-    wybierzContainer.style.background = '#333';
+    selectContainer.style.background = '#333';
     selectContainer.style.zIndex = '9999';
-    selectContainer.style.width = '150px';
+    selectContainer.style.width = '150px'; 
     selectContainer.style.padding = '1px';
     selectContainer.style.borderRadius = '5px';
     selectContainer.style.borderStyle = 'solid';
     selectContainer.style.borderWidth = '5px 6px 5px 6px';
-    selectContainer.style.display = 'blok';
-    selectContainer.style.userSelect = 'brak';
-    wybierzContainer.style.color = 'rgba(0,0,0,0.9)';
+    selectContainer.style.display = 'block';
+    selectContainer.style.userSelect = 'none';
+    selectContainer.style.color = 'rgba(0,0,0,0.9)'; 
 
     const actionSelect = document.createElement('select');
     actionSelect.id = 'actionSelect';
-    actionSelect.style.color = 'gold'; // Ustaw początkowy kolor czcionki na złoty
+    actionSelect.style.color = 'gold'; // Set initial font color to gold
     actionSelect.style.background = '#333333';
-    actionSelect.style.border = 'brak';
+    actionSelect.style.border = 'none';
     actionSelect.style.width = '100%';
     actionSelect.style.height = '100%';
     actionSelect.style.padding = '5px';
     actionSelect.style.fontSize = '12px';
-    actionSelect.style.fontWeight = 'pogrubiony';
+    actionSelect.style.fontWeight = 'bold';
 
-    // Pobierz wybraną opcję z pamięci lokalnej, jeśli jest dostępna
+    // Retrieve the selected option from local storage, if available
     const savedOption = window.localStorage.getItem('selectedOption');
 
-    // Dodanie nasłuchiwacza zdarzeń w celu zmiany koloru wybranej opcji
-    actionSelect.addEventListener('change', funkcja() {
+    // Adding event listener to change the color of the selected option
+    actionSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
-        selectedOption.style.color = 'złoty';
-        dla (let i = 0; i < this.options.length; i++) {
-            jeśli (i !== this.selectedIndex) {
-                this.options[i].style.color = 'biały';
+        selectedOption.style.color = 'gold';
+        for (let i = 0; i < this.options.length; i++) {
+            if (i !== this.selectedIndex) {
+                this.options[i].style.color = 'white';
             }
         }
-        // Zapisz wybraną opcję w pamięci lokalnej
+        // Store the selected option in local storage
         window.localStorage.setItem('selectedOption', selectedOption.value);
     });
 
-    const opcje = ['Kody', 'PVP', 'PVM', 'Listy', 'Wyprawy', 'Zbierajka'];
-    opcje.forEach(opcja => {
-        const optionElement = document.createElement('opcja');
-        optionElement.value = opcja;
-        optionElement.textContent = opcja;
-        // Ustaw wybrany atrybut, jeśli opcja pasuje do opcji zapisanej w pamięci lokalnej
-        jeśli (zapisana opcja === opcja) {
-            optionElement.selected = prawda;
-            optionElement.style.color = 'gold'; // Ustaw kolor czcionki na złoty dla zapisanej opcji
+    const options = ['Kody', 'PVP', 'PVM', 'Listy', 'Wyprawy', 'Zbierajka'];
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option;
+        // Set the selected attribute if the option matches the saved option in local storage
+        if (savedOption === option) {
+            optionElement.selected = true;
+            optionElement.style.color = 'gold'; // Set font color to gold for the saved option
         }
-        actionSelect.appendChild(element opcji);
+        actionSelect.appendChild(optionElement);
     });
 
     selectContainer.appendChild(actionSelect);
-    dokument.body.appendChild(selectContainer);
+    document.body.appendChild(selectContainer);
 }
 
-funkcja performCodeActions() {
-    niech ghButtonElement = document.querySelector('.gh_button.gh_code');
-    niech codeButtonElement = document.querySelector('.code_button.code_code');
-    niech codeButtonAccElement = document.querySelector('.code_button.code_acc');
-    niech codeButtonSubElement = document.querySelector('.code_button.code_zast');
-    jeśli (ghButtonElement && codeButtonElement) {
-        ustawCzasOkres(() => {
+function performCodeActions() {
+    let ghButtonElement = document.querySelector('.gh_button.gh_code');
+    let codeButtonElement = document.querySelector('.code_button.code_code');
+    let codeButtonAccElement = document.querySelector('.code_button.code_acc');
+    let codeButtonSubElement = document.querySelector('.code_button.code_zast');
+    if (ghButtonElement && codeButtonElement) {
+        setTimeout(() => {
             ghButtonElement.click();
-            ustawCzasOkres(() => {
+            setTimeout(() => {
                 codeButtonElement.click();
-                ustawCzasOkres(() => {
+                setTimeout(() => {
                     codeButtonAccElement.click();
-                    ustawCzasOkres(() => {
+                    setTimeout(() => {
                         codeButtonSubElement.click();
-                   (2000);
-                (2000);
-            (2000);
-        (2000);
+                   }, 2000);
+                }, 2000);
+            }, 2000);
+        }, 2000);
     }
 }
 
-funkcja performPvpActions() {
-    zwróć nową obietnicę((rozwiąż, odrzuć) => {
-        niech ghButtonElement = document.querySelector('.gh_button.gh_pvp');
-        niech codeButtonElement = document.querySelector('.pvp_button.pvp_pvp');
-        jeśli (ghButtonElement && codeButtonElement) {
-            ustawCzasOkres(() => {
-                GRA.page_switch('mapa_gry');
-                ustawCzasOkres(() => {
-                    ghButtonElement.click();
-                    ustawCzasOkres(() => {
+function performPvpActions() {
+    return new Promise((resolve, reject) => {
+        let ghButtonElement = document.querySelector('.gh_button.gh_pvp');
+        let codeButtonElement = document.querySelector('.pvp_button.pvp_pvp');
+        if (ghButtonElement && codeButtonElement) {
+            setTimeout(() => {
+                GAME.page_switch('game_map');
+                setTimeout(() => {
+                    ghButtonElement.click(); 
+                    setTimeout(() => {
                         codeButtonElement.click();
-                        rozstrzygać();
-                    (2000);
+                        resolve();
+                    }, 2000);
                 }, 1000);
-            (2000);
-        } w przeciwnym razie {
-            reject(new Error('Nie znaleziono jednego lub obu przycisków'));
+            }, 2000);
+        } else {
+            reject(new Error('One or both buttons not found'));
         }
     });
 }
 
-funkcja arenaAndAbyss() {
-    zwróć nową obietnicę((rozwiąż, odrzuć) => {
-        ustawTimeout(funkcja() {
-            przycisk var = document.querySelector('.qlink.manage_auto_arena');
-            jeśli (przycisk) {
-                przycisk.kliknij();
-                ustawTimeout(funkcja() {
+function arenaAndAbyss() {
+    return new Promise((resolve, reject) => {
+        setTimeout(function() {
+            var button = document.querySelector('.qlink.manage_auto_arena');
+            if (button) {
+                button.click();
+                setTimeout(function() {
                     var abyssButton = document.querySelector('.qlink.manage_auto_abyss');
-                    jeśli (przycisk otchłani) {
+                    if (abyssButton) {
                         abyssButton.click();
-                        rozstrzygać();
-                    } w przeciwnym razie {
-                        odrzuć(nowy Błąd('Nie znaleziono przycisku Otchłań'));
+                        resolve(); 
+                    } else {
+                        reject(new Error('Abyss button not found'));
                     }
                 }, 700);
-            } w przeciwnym razie {
-                odrzuć(nowy Błąd('Nie znaleziono przycisku Areny'));
+            } else {
+                reject(new Error('Arena button not found'));
             }
         }, 1500);
     });
@@ -222,46 +222,46 @@ funkcja arenaAndAbyss() {
 
 
 
-funkcja selectSavedSpawners() {
+function selectSavedSpawners() {
     const selectedSpawners = JSON.parse(localStorage.getItem('selectedSpawners')) || [];
-    niech indeks = 0;
-    const intervalId = ustawInterwał(() => {
-        jeśli (indeks >= selectedSpawners.length) {
-            clearInterval(interwałId);
-            powrót;
+    let index = 0;
+    const intervalId = setInterval(() => {
+        if (index >= selectedSpawners.length) {
+            clearInterval(intervalId);
+            return;
         }
-        const spawnerId = selectedSpawners[indeks];
+        const spawnerId = selectedSpawners[index];
         const spawner = document.getElementById(spawnerId);
-        jeśli (spawner) {
-            spawner.click();
+        if (spawner) {
+            spawner.click(); 
         }
-        indeks++;
+        index++;
     }, 800);
 }
 
-funkcja saveSelectedSpawners() {
-    const wybraneSpawners = [];
+function saveSelectedSpawners() {
+    const selectedSpawners = [];
     const spawners = document.querySelectorAll('[id^="kws_spawner_ignore_"]');
     spawners.forEach(spawner => {
-        jeśli (spawner.checked) {
+        if (spawner.checked) {
             selectedSpawners.push(spawner.id);
         }
     });
     localStorage.setItem('selectedSpawners', JSON.stringify(selectedSpawners));
 }
 
-funkcja performPvmActions() {
+function performPvmActions() {
     const ghRespButton = document.querySelector('.gh_button.gh_resp');
-    jeśli (ghRespButton) {
-        ustawCzasOkres(() => {
+    if (ghRespButton) {
+        setTimeout(() => {
             ghRespButton.click();
-            ustawCzasOkres(() => {
+            setTimeout(() => {
                 const respButton = document.querySelector('.resp_button.resp_resp');
-                jeśli (przycisk odpowiedzi) {
-                    GRA.page_switch('mapa_gry');
-                    ustawCzasOkres(() => {
+                if (respButton) {
+                    GAME.page_switch('game_map');
+                    setTimeout(() => {
                         respButton.click();
-                        wybierzZapisaneSpawnery();
+                        selectSavedSpawners();
                         const spawners = document.querySelectorAll('[id^="kws_spawner_ignore_"]');
                         spawners.forEach(spawner => {
                             spawner.addEventListener('change', saveSelectedSpawners);
@@ -272,37 +272,37 @@ funkcja performPvmActions() {
         }, 2500);
     }
 }
-funkcja autoekspedycje() {
-  ustawTimeout(funkcja() {
-    przycisk var = document.querySelector('.qlink.sideIcons.manage_autoExpeditions');
-    jeśli (przycisk) {
-      przycisk.kliknij();
+function autoexpeditions() {
+  setTimeout(function() {
+    var button = document.querySelector('.qlink.sideIcons.manage_autoExpeditions');
+    if (button) {
+      button.click();
     }
   }, 10000);
 }
 
-funkcja performListActions() {
+function performListActions() {
     const ghLpvmButton = document.querySelector('.gh_button.gh_lpvm');
-    jeśli (ghLpvmButton) {
-        ustawCzasOkres(() => {
-            ghLpvmButton.kliknij();
-            ustawCzasOkres(() => {
-                const lpvmUBotton = document.querySelector('.lpvm_button.lpvm_u');
-                jeśli (lpvmUBotton) {
-                    lpvmUBotton.click();
-                    ustawCzasOkres(() => {
-                        // Wykonaj GAME.page_switch('game_map');
-                        GRA.page_switch('mapa_gry');
-                        ustawCzasOkres(() => {
+    if (ghLpvmButton) {
+        setTimeout(() => {
+            ghLpvmButton.click();
+            setTimeout(() => {
+                const lpvmUButton = document.querySelector('.lpvm_button.lpvm_u');
+                if (lpvmUButton) {
+                    lpvmUButton.click();
+                    setTimeout(() => {
+                        // Execute GAME.page_switch('game_map');
+                        GAME.page_switch('game_map');
+                        setTimeout(() => {
                             const lpvmLpvmButton = document.querySelector('.lpvm_button.lpvm_lpvm');
-                            jeśli (lpvmLpvmButton) {
-                                lpvmLpvmButton.kliknij();
+                            if (lpvmLpvmButton) {
+                                lpvmLpvmButton.click();
                             }
-                        (2000);
-                    (2000);
+                        }, 2000);
+                    }, 2000);
                 }
-            (2000);
-        (2000);
+            }, 2000);
+        }, 2000);
     }
 }
 
@@ -310,28 +310,28 @@ funkcja performListActions() {
 
 
 
-funkcja performOtherActions() {
+function performOtherActions() {
     const ghResButton = document.querySelector('.gh_button.gh_res');
-    jeśli (ghResButton) {
-        ustawCzasOkres(() => {
+    if (ghResButton) {
+        setTimeout(() => {
             ghResButton.click();
-            ustawCzasOkres(() => {
-                // Wykonaj GAME.page_switch('game_map');
-                GRA.page_switch('mapa_gry');
-                ustawCzasOkres(() => {
+            setTimeout(() => {
+                // Execute GAME.page_switch('game_map');
+                GAME.page_switch('game_map');
+                setTimeout(() => {
                     const resButton = document.querySelector('.res_button.res_res');
-                    jeśli (przycisk) {
+                    if (resButton) {
                         resButton.click();
                     }
-                (2000);
-            (2000);
-        (2000);
+                }, 2000);
+            }, 2000);
+        }, 2000);
     }
 }
 
-utwórzPrzyciskKontrolny();
+createControlButton();
 
 const runningStateFromStorage = window.localStorage.getItem('isRunning');
-jeśli (runningStateFromStorage === 'true') {
-    przełączScript();
+if (runningStateFromStorage === 'true') {
+    toggleScript();
 }
