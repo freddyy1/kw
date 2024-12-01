@@ -1,160 +1,160 @@
-class ballUpgrade {
-    constructor() {
+klasa ballUpgrade {
+    konstruktor() {
         this.upgradeAllText = 'Ulepszaj wszystkie';
         this.stopText = 'STOP';
         this.waitingForResponse = false;
-        this.bonuses = [];
-        this.synergy = parseInt($("#ss_synergy_lvl").html());
-        this.hasStarted = false;
-        $("body").on("click", `button[data-option="ss_page"][data-page="upgrade"]`, () => {
+        this.bonusy = [];
+        to.synergy = parseInt($("#ss_synergy_lvl").html());
+        this.hasStarted = fałsz;
+        $("body").on("kliknij", `button[data-option="ss_page"][data-page="upgrade"]`, () => {
             this.showCheckboxes();
             this.showUpgradeAllButton();
         });
-        $("body").on("click", `button[data-option="ss_page"][data-page="reset"], #soulstone_interface .closeicon`, () => {
-            if (this.hasStarted) {
+        $("body").on("kliknij", `button[data-option="ss_page"][data-page="resetuj"], #soulstone_interface .closeicon`, () => {
+            jeśli (this.hasStarted) {
                 this.stopUpgrading();
             }
-            this.hideCheckboxes();
+            this.hidePola wyboru();
             this.hideUpgradeAllButton();
         });
-        $("body").on("click", `button[data-option="ss_upgrade_all"]`, () => {
-            this.controller();
+        $("body").on("kliknij", `button[data-option="ss_upgrade_all"]`, () => {
+            ten.kontroler();
         });
     }
 
-    controller() {
-        if (this.hasStarted) {
-            this.hasStarted = false;
+    kontroler() {
+        jeśli (this.hasStarted) {
+            this.hasStarted = fałsz;
             this.stopUpgrading();
-        } else {
-            this.hasStarted = true;
+        } w przeciwnym razie {
+            this.hasStarted = prawda;
             this.startUpgrading();
         }
         this.switchCheckboxesState();
-        this.switchButtonText();
+        ten.tekstprzyciskuprzełącznika();
     }
 
-    startUpgrading() {
-        if (this.hasStarted) {
-            GAME.completeProgress = () => {
-                var res = GAME.progress;
-                switch (res.a) {
-                    case 45:
-                        if (res.ball) {
-                            GAME.parseData(55, res);
-                            if (this.hasStarted) {
-                                if(this.waitingForResponse) {
+    rozpocznijaktualizację() {
+        jeśli (this.hasStarted) {
+            GRA.completeProgress = () => {
+                var res = postęp gry;
+                przełącznik (res.a) {
+                    przypadek 45:
+                        jeśli (res.ball) {
+                            GRA.parseData(55, res);
+                            jeśli (this.hasStarted) {
+                                jeśli(this.waitingForResponse) {
                                     this.waitingForResponse = false;
                                 }
-                                this.upgrade();
+                                to.uaktualnienie();
                             }
                         }
-                        break;
+                        przerwa;
                 }
-                delete GAME.progress;
+                usuń GAME.progress;
             }
-            this.bonuses = [];
-            this.upgrade();
+            this.bonusy = [];
+            to.uaktualnienie();
         }
     }
 
-    stopUpgrading() {
-        GAME.completeProgress = () => {
-            var res = GAME.progress;
-            switch (res.a) {
-                case 45:
-                    if (res.ball) {
-                        GAME.parseData(55, res);
+    zatrzymajaktualizację() {
+        GRA.completeProgress = () => {
+            var res = postęp gry;
+            przełącznik (res.a) {
+                przypadek 45:
+                    jeśli (res.ball) {
+                        GRA.parseData(55, res);
                     }
-                    break;
+                    przerwa;
             }
-            delete GAME.progress;
+            usuń GAME.progress;
         }
 
         this.waitingForResponse = false;
 
-        if (this.hasStarted) {
-            this.controller()
+        jeśli (this.hasStarted) {
+            ten.kontroler()
         }
     }
 
-    upgrade() {
-        if(this.waitingForResponse) {
-            return;
+    aktualizacja() {
+        jeśli(this.waitingForResponse) {
+            powrót;
         }
 
         this.rateUpgrade();
     }
 
-    sendUpgrade() {
-        GAME.emitOrder({ a: 45, type: 3, bid: GAME.ball_id });
+    wyślijUpgrade() {
+        GAME.emitOrder({ a: 45, typ: 3, licytacja: GAME.ball_id });
         this.waitingForResponse = true;
     }
 
     rateUpgrade() {
-        var shouldAcceptUpgrade = false;
+        var powinienAcceptUpgrade = false;
         this.markBonuses();
         shouldAcceptUpgrade = this.evaluateBonuses();
-        if (shouldAcceptUpgrade) {
-            GAME.emitOrder({ a: 45, type: 5, bid: GAME.ball_id });
+        jeśli (powinienAcceptUpgrade) {
+            GAME.emitOrder({ a: 45, typ: 5, licytacja: GAME.ball_id });
         }
 
         setTimeout(this.sendUpgrade, shouldAcceptUpgrade ? 300 : 0);
     }
 
-    markBonuses() {
-        this.bonuses = [];
-        $('.ball_stats.stat_page tr[id]:not([style*="display: none"])').each((value, index, array) => {
-            this.bonuses.push($(`#bon${value + 1}_upgrade`)[0].checked);
-        }, this);
+    zaznaczBonkusy() {
+        this.bonusy = [];
+        $('.ball_stats.stat_page tr[id]:not([style*="display: none"])').each((wartość, indeks, tablica) => {
+            this.bonuses.push($(`#bon${wartość + 1}_upgrade`)[0].checked);
+        }, Ten);
 
-        let allUnchecked = this.bonuses.every((value, index, array) => {
-            value == false;
-        }, this);
+        niech allUnchecked = this.bonuses.every((wartość, indeks, tablica) => {
+            wartość == fałsz;
+        }, Ten);
 
-        if(allUnchecked) {
+        jeśli(wszystkieNiezaznaczone) {
             this.stopUpgrading
         }
     }
 
-    evaluateBonuses() {
-        var sum = 0;
-        this.bonuses.forEach((shouldInclude, index, array) => {
-            if(shouldInclude) {
-                sum += parseFloat($(`#ss_change_${index+1}`).text());
+    OceńBonusy() {
+        suma zmiennej = 0;
+        this.bonuses.forEach((powinien zawierać, indeks, tablica) => {
+            jeśli(powinienZawierać) {
+                suma += parseFloat($(`#ss_change_${index+1}`).text());
             }
-        }, this);
+        }, Ten);
 
-        return sum >= 0;
+        suma zwrotna >= 0;
     }
 
-    showCheckboxes() {
-        $('.ball_stats.stat_page tr[id]:not([style*="display: none"])').each(function (index) {
+    pokażpola wyboru() {
+        $('.ball_stats.stat_page tr[id]:not([style*="display: none"])').each(funkcja (indeks) {
             $(`#stat${index + 1}_bon`).after(`<input type="checkbox" id="bon${index + 1}_upgrade" value=${index + 1}>`);
         });
     }
 
-    switchCheckboxesState() {
-        $(".ball_stats.stat_page input[type=checkbox]").each((index) => {
+    przełączStan pól wyboru() {
+        $(".ball_stats.stat_page wejście[typ=pole wyboru]").each((indeks) => {
             $(`#bon${index + 1}_upgrade`).prop('disabled', this.hasStarted);
         });
     }
 
-    hideCheckboxes() {
-        $(".ball_stats.stat_page input[type=checkbox]").each((index) => {
+    ukryjpola wyboru() {
+        $(".ball_stats.stat_page wejście[typ=pole wyboru]").each((indeks) => {
             $(`#bon${index + 1}_upgrade`).remove();
         });
     }
 
-    showUpgradeAllButton() {
-        $("#ss_page_upgrade > button").after('<button class="newBtn option" data-option="ss_upgrade_all">Ulepszaj wszystkie</button>');
+    pokażUaktualnijWszystkiePrzyciski() {
+        $("#ss_page_upgrade > button").after('<button class="newBtn option" data-option="ss_upgrade_all">Ulepsz wszystkie</button>');
     }
 
     switchButtonText() {
         $('#ss_page_upgrade button[data-option="ss_upgrade_all"]').html(`${this.hasStarted ? this.stopText : this.upgradeAllText}`);
     }
 
-    hideUpgradeAllButton() {
-        $('#ss_page_upgrade button[data-option="ss_upgrade_all"]').remove();
+    ukryjUaktualnijWszystkiePrzyciski() {
+        $('#ss_page_upgrade przycisk[data-option="ss_upgrade_all"]').remove();
     }
 }
