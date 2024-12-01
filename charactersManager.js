@@ -1,71 +1,71 @@
-klasa KwsCharactersManager {
-    konstruktor() {
-        console.log("KWS: nowy menedżer postaci...");
-        te.znaki = [];
+class KwsCharactersManager {
+    constructor() {
+        console.log("KWS: new characters manager...");
+        this.characters = [];
         this.currentCharacterId = 0;
-        ten.bieżącyIndeks = 0;
+        this.currentIndex = 0;
     }
-    ustawCurrentCharacterId(charId) {
-        console.log("KWS: menedżer znaków, ustaw bieżący charId = %s", charId);
+    setCurrentCharacterId(charId) {
+        console.log("KWS: characters manager, set current charId = %s", charId);
         this.currentCharacterId = charId;
-        this.currentIndex = this.characters.findIndex((wartość, indeks, tablica) => {
-            wartość zwracana == charId;
+        this.currentIndex = this.characters.findIndex((value, index, array) => {
+            return value == charId;
         });
     }
-    pobierzNextCharId() {
-        jeśli (this.characters.length == 1) {
-            console.log("KWS: następny charID to ten charID, tylko jeden char");
-            zwróć this.currentCharacterId;
+    getNextCharId() {
+        if (this.characters.length == 1) {
+            console.log("KWS: next charID is this charID, only one char");
+            return this.currentCharacterId; 
         }
 
-        zmienna returnCharId;
+        var returnCharId;
 
-        jeśli (this.currentIndex == this.characters.length - 1) {
+        if (this.currentIndex == this.characters.length - 1) {
             returnCharId = this.characters[0];
-        } w przeciwnym razie {
+        } else {
             returnCharId = this.characters[this.currentIndex + 1];
         }
 
-        this.setCurrentCharacterId(zwróćCharId);
+        this.setCurrentCharacterId(returnCharId);
 
-        console.log("KWS: pobierz następny charID = %s", returnCharId);
-        zwróć returnCharId;
+        console.log("KWS: get next charID = %s", returnCharId);
+        return returnCharId;
     }
-    pobierzPoprzedniCharId() {
-        jeśli (this.characters.length == 1) {
-            console.log("KWS: poprzedni charID to ten charID, tylko jeden char");
-            zwróć this.currentCharacterId;
+    getPreviousCharId() {
+        if (this.characters.length == 1) {
+            console.log("KWS: previous charID is this charID, only one char");
+            return this.currentCharacterId;
         }
 
-        zmienna returnCharId;
+        var returnCharId;
 
-        jeśli (this.currentIndex == 0) {
+        if (this.currentIndex == 0) {
             returnCharId = this.characters[this.characters.length - 1];
-        } w przeciwnym razie {
+        } else {
             returnCharId = this.characters[this.currentIndex - 1];
         }
 
-        this.setCurrentCharacterId(zwróćCharId);
+        this.setCurrentCharacterId(returnCharId);
         
-        console.log("KWS: pobierz poprzedni charID = %s", returnCharId);
-        zwróć returnCharId;
+        console.log("KWS: get previous charID = %s", returnCharId);
+        return returnCharId;
     }
 }
 
-funkcja getCharacters() {
+function getCharacters() {
     var allCharacters = [...$("li[data-option=select_char]")];
-    jeśli (długość wszystkich znaków == 0) {
-        console.log("KWS: nie wykryto listy znaków, spróbuj za 200 ms...");
-        ustawTimeout(pobierzZnaki, 200);
-    } w przeciwnym razie {
-        console.log("KWS: wykryto listę znaków, zapisuję...");
-        var kwsCharactersManager = nowy KwsCharactersManager();
-        allCharacters.forEach((element, indeks, tablica) => {
+    if (allCharacters.length == 0) {
+        console.log("KWS: no characters list detected, try in 200ms...");
+        setTimeout(getCharacters, 200);
+    } else {
+        console.log("KWS: characters list detected, saving...");
+        var kwsCharactersManager = new KwsCharactersManager();
+        allCharacters.forEach((element, index, array) => {
             kwsCharactersManager.characters.push(element.getAttribute("data-char_id"));
         });
-        kwsLocalCharacters = Menedżer znaków kws;
+        kwsLocalCharacters = kwsCharactersManager;
     }
 }
 
-var kwsLocalCharacters = niezdefiniowane;
-pobierzZnaki();
+var kwsLocalCharacters = undefined;
+getCharacters();
