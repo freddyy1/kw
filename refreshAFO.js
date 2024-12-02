@@ -1,6 +1,3 @@
-
-
-
 let lastTimestamp = Date.now();
 let isRunning = false;
 let refreshInterval;
