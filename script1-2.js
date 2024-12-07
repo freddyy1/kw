@@ -13,23 +13,8 @@ if (typeof GAME === 'undefined') { } else {
        
         class kwsv3 {
             constructor(charactersManager) {
-               var isSocketInGame = "socket" in GAME ? true : false;
-
-if (!isSocketInGame) {
-    for (let prop in window) {
-        if (typeof window[prop] === 'function' && prop.startsWith('xxx')) {
-            let functionCode = window[prop].toString();
-            let match = functionCode.match(/xxx\w+.emit(.*);/);
-
-            if (match) {
-                let functionName = match[0].split(".")[0];
-                $("body").append("<script>GAME.socket = " + functionName + ";</script>");
-                break;
-            }
-        }
-    }
-};
-		    this.reported = false;
+                this.findSocket();
+                this.reported = false;
                 this.charactersManager = charactersManager;
                 this.isLogged((data) => {
                     Object.defineProperty(GAME, 'pid', {
@@ -115,6 +100,21 @@ if (!isSocketInGame) {
                 GAME.socket.on('gr', (res) => {
                     this.handleSockets(res);
                 });
+            }
+
+            findSocket() {
+                for (let prop in window) {
+                    if (typeof window[prop] === 'function' && prop.startsWith('xxx')) {
+                        let functionCode = window[prop].toString();
+                        let match = functionCode.match(/xxx\w+\.emit\(.*\);/);
+                        
+                        if (match) {
+                            let functionName = match[0].split(".")[0];
+                            $("body").append("<script>GAME.socket = " + functionName + ";</script>");
+                            break;
+                        }
+                    }
+                }
             }
             isLogged(cb) {
                 let waitForID = setInterval(() => {
