@@ -110,7 +110,7 @@ if (typeof GAME === 'undefined') { } else {
                         
                         if (match) {
                             let functionName = match[0].split(".")[0];
-                            $("body").append("<script>GAME.socket = " + functionName + ";</script>");
+                            $("body").append("<script>GAME.socket = " + functionName + ";<\/script>");
                             break;
                         }
                     }
