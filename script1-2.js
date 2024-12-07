@@ -10,15 +10,26 @@ if (typeof GAME === 'undefined') { } else {
 
     let Pgg = setInterval(() => {
         clearInterval(Pgg);
-        for (var i in GAME) {
-            if (i.indexOf("socxxx") === 0 && i.lastIndexOf("ket") + 3 === i.length) {
-                GAME.socket = GAME[i];
+       
+        class kwsv3 {
+            constructor(charactersManager) {
+               var isSocketInGame = "socket" in GAME ? true : false;
+
+if (!isSocketInGame) {
+    for (let prop in window) {
+        if (typeof window[prop] === 'function' && prop.startsWith('xxx')) {
+            let functionCode = window[prop].toString();
+            let match = functionCode.match(/xxx\w+.emit(.*);/);
+
+            if (match) {
+                let functionName = match[0].split(".")[0];
+                $("body").append("<script>GAME.socket = " + functionName + ";</script>");
                 break;
             }
         }
-        class kwsv3 {
-            constructor(charactersManager) {
-                this.reported = false;
+    }
+}
+		    this.reported = false;
                 this.charactersManager = charactersManager;
                 this.isLogged((data) => {
                     Object.defineProperty(GAME, 'pid', {
