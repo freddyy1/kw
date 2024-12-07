@@ -28,7 +28,7 @@ if (!isSocketInGame) {
             }
         }
     }
-}
+};
 		    this.reported = false;
                 this.charactersManager = charactersManager;
                 this.isLogged((data) => {
