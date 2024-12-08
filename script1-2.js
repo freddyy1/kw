@@ -18,6 +18,7 @@ let Pgg = setInterval(() => {
                 if (eval(match[1])['io']) {GAME.socket = eval(match[1]); return;}
             }
         });
+
         class kwsv3 {
             constructor(charactersManager) {
                 this.charactersManager = charactersManager;
