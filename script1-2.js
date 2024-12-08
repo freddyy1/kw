@@ -118,7 +118,7 @@ findSocket() {
                 }
             }
         }
-    }
+    };
             isLogged(cb) {
                 let waitForID = setInterval(() => {
                     if (GAME.pid) {
