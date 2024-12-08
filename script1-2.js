@@ -90,18 +90,7 @@ if (typeof GAME === 'undefined') { } else {
                 this.additionalTopBarVisible = false;
                 this.baselinePower = undefined;
                 this.baselineLevel = undefined;
-                setInterval(() => {
-                    if ('char_data' in GAME) {
-                        this.updateTopBar();
-                    }
-                }, 1000);
-                this.setWebsiteBackground();
-                this.bindClickHandlers();
-                GAME.socket.on('gr', (res) => {
-                    this.handleSockets(res);
-                });
-            }
-
+               
           findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
