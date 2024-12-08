@@ -8,9 +8,7 @@ if (typeof GAME === 'undefined') { } else {
         }
     }, 50);
 
-    let Pgg = setInterval(() => {
-        clearInterval(Pgg);
-     findSocket() {
+ findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
                 let functionCode = window[prop].toString();
