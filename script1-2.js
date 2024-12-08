@@ -102,23 +102,20 @@ if (typeof GAME === 'undefined') { } else {
                 });
             }
 
-findSocket() {
-        for (let prop in window) {
-            if (typeof window[prop] === 'function') {
-                let functionCode = window[prop].toString();
-
-                if (functionCode.includes('GAME.load_start();')) {
-                    let match = functionCode.match(/(\w+).emit(.*);/);
-
-                    if (match) {
-                        let emitFunctionName = match[1];
-                        $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
-                        break;
+            findSocket() {
+                for (let prop in window) {
+                    if (typeof window[prop] === 'function' && prop.startsWith('xxx')) {
+                        let functionCode = window[prop].toString();
+                        let match = functionCode.match(/xxx\w+\.emit\(.*\);/);
+                        
+                        if (match) {
+                            let functionName = match[0].split(".")[0];
+                            $("body").append("<script>GAME.socket = " + functionName + ";<\/script>");
+                            break;
+                        }
                     }
                 }
             }
-        }
-    }
             isLogged(cb) {
                 let waitForID = setInterval(() => {
                     if (GAME.pid) {
@@ -2451,3 +2448,4 @@ findSocket() {
     }
     )
 }
+	
