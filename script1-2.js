@@ -90,7 +90,18 @@ if (typeof GAME === 'undefined') { } else {
                 this.additionalTopBarVisible = false;
                 this.baselinePower = undefined;
                 this.baselineLevel = undefined;
-               
+                setInterval(() => {
+                    if ('char_data' in GAME) {
+                        this.updateTopBar();
+                    }
+                }, 1000);
+                this.setWebsiteBackground();
+                this.bindClickHandlers();
+                GAME.socket.on('gr', (res) => {
+                    this.handleSockets(res);
+                });
+            }
+
           findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
@@ -104,10 +115,8 @@ if (typeof GAME === 'undefined') { } else {
                         $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
                         break;
                     }
-                }
-            }
-        }
-    }
+                };
+            
             isLogged(cb) {
                 let waitForID = setInterval(() => {
                     if (GAME.pid) {
