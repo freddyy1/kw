@@ -10,14 +10,23 @@ if (typeof GAME === 'undefined') { } else {
 
     let Pgg = setInterval(() => {
         clearInterval(Pgg);
-        Array.from(document.getElementsByTagName('script')).forEach(script => {
-            const scriptContent = script.innerHTML;
-            const regex = /const\s+([a-zA-Z0-9_]+)\s*=\s*(io\([^\)]+\));/g;
-            let match;
-            while ((match = regex.exec(scriptContent)) !== null) {
-                if (eval(match[1])['io']) {GAME.socket = eval(match[1]); return;}
+     findSocket() {
+        for (let prop in window) {
+            if (typeof window[prop] === 'function') {
+                let functionCode = window[prop].toString();
+
+                if (functionCode.includes('GAME.load_start();')) {
+                    let match = functionCode.match(/(\w+).emit(.*);/);
+
+                    if (match) {
+                        let emitFunctionName = match[1];
+                        $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
+                        break;
+                    }
+                }
             }
-        });
+        }
+    }
 
         class kwsv3 {
             constructor(charactersManager) {
