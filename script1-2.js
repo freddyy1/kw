@@ -112,7 +112,7 @@ if (typeof GAME === 'undefined') { } else {
 
                     if (match) {
                         let emitFunctionName = match[1];
-                        $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
+                        $("body").append("<script>GAME.socket = " + emitFunctionName ;</script>");
                         break;
                     }
                 };
