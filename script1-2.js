@@ -102,17 +102,7 @@ if (typeof GAME === 'undefined') { } else {
                 });
             }
 
-   findSocket() {
-        for (let prop in window) {
-            if (typeof window[prop] === 'function') {
-                let functionCode = window[prop].toString();
-
-                if (functionCode.includes('GAME.load_start();')) {
-                    let match = functionCode.match(/(\w+).emit(.*);/);
-
-                    if (match) {
-                        let emitFunctionName = match[1];
-                        $("body").append("<script>GAME.socket = " + emitFunctionName + ";<findSocket() {
+findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
                 let functionCode = window[prop].toString();
@@ -128,6 +118,7 @@ if (typeof GAME === 'undefined') { } else {
                 }
             }
         }
+    }
     }/script>");
                         break;
                     }
