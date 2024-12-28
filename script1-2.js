@@ -2545,7 +2545,7 @@ if (typeof GAME === 'undefined') { } else {
             $('#available_servers option[value=' + this.server + ']').prop('selected', true);
         };
         const kulka = new ballManager();
-        const ekwipunek = new ekwipunekMenager();
+        
         let adimp = false;
         let arena_count = 0;
         let pvp_count = 0;
