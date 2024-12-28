@@ -9,7 +9,7 @@ if (typeof GAME === 'undefined') { } else {
     }, 50);
 
   
-findSocket() 
+findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
                 let functionCode = window[prop].toString();
@@ -21,6 +21,11 @@ findSocket()
                         let emitFunctionName = match[1];
                         $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
                         break;
+                    }
+                }
+            }
+        }
+    }
 
 	    
         class kwsv3 {
