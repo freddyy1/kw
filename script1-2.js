@@ -1,5 +1,15 @@
 var checked = false;
-findSocket() {
+
+
+if (typeof GAME === 'undefined') { } else {
+    let Pog = setInterval(() => {
+        if (!GAME.pid) { } else {
+            clearInterval(Pog);
+            checked = true;
+        }
+    }, 50);
+
+   findSocket() {
         for (let prop in window) {
             if (typeof window[prop] === 'function') {
                 let functionCode = window[prop].toString();
@@ -16,25 +26,6 @@ findSocket() {
             }
         }
     }
-
-if (typeof GAME === 'undefined') { } else {
-    let Pog = setInterval(() => {
-        if (!GAME.pid) { } else {
-            clearInterval(Pog);
-            checked = true;
-        }
-    }, 50);
-
-    let Pgg = setInterval(() => {
-        clearInterval(Pgg);
-        Array.from(document.getElementsByTagName('script')).forEach(script => {
-            const scriptContent = script.innerHTML;
-            const regex = /const\s+([a-zA-Z0-9_]+)\s*=\s*(io\([^\)]+\));/g;
-            let match;
-            while ((match = regex.exec(scriptContent)) !== null) {
-                if (eval(match[1])['io']) {GAME.socket = eval(match[1]); return;}
-            }
-        });
 
         class kwsv3 {
             constructor(charactersManager) {
