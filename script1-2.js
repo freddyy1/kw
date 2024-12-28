@@ -9,25 +9,7 @@ if (typeof GAME === 'undefined') { } else {
         }
     }, 50);
 
-   findSocket() {
-        for (let prop in window) {
-            if (typeof window[prop] === 'function') {
-                let functionCode = window[prop].toString();
-
-                if (functionCode.includes('GAME.load_start();')) {
-                    let match = functionCode.match(/(\w+).emit(.*);/);
-
-                    if (match) {
-                        let emitFunctionName = match[1];
-                        $("body").append("<script>GAME.socket = " + emitFunctionName + ";</script>");
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-        class kwsv3 {
+ class kwsv3 {
             constructor(charactersManager) {
                 this.charactersManager = charactersManager;
                 this.isLogged((data) => {
