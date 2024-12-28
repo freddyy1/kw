@@ -1,3 +1,4 @@
+
 class ballUpgrade {
     constructor() {
         this.upgradeAllText = 'Ulepszaj wszystkie';
