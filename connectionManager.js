@@ -96,7 +96,25 @@ if (kwsConnectionMonitorVerifier) {
     kwsConnectionMonitorVerifier = undefined;
 }
 
-
+function verifyConnectionManager() {
+    if(typeof kwsConnectionMonitor === 'undefined') {
+      console.log("KWS: no connection monitor - create new");
+      kwsConnectionMonitor = new KwsConnectionManager();
+    } else {
+      console.log("KWS: connection monitor detected");
+      var disconnectedCharacterId = kwsConnectionMonitor.getReconnectionCookie();
+      if (disconnectedCharacterId != '') {
+        if (kwsConnectionMonitor.isRunning) {
+          console.log("KWS: connection monitor is running something, please wait!");
+        } else {
+          console.log("KWS: connection monitor not running, trying to manually run it");
+          kwsConnectionMonitor.handleLoginProcess();
+        }
+      } else {
+        console.log("KWS: no need for connection manager, all good!");
+      }
+    }
+}
 
 var kwsConnectionMonitorVerifier = setInterval(verifyConnectionManager, 5000);
 
