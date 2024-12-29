@@ -535,7 +535,7 @@ if (typeof GAME === 'undefined') { } else {
                     return false;
                 }
             }
-            createMinimapSettings() {
+           createMinimapSettings() {
                 this.manageMinimapSettings("load");
                 this.manageMapSize("load");
                 this.managePilot();
@@ -777,16 +777,24 @@ if (typeof GAME === 'undefined') { } else {
                 }
             }
             markDaily() {
-                let daily = ["ZADANIE PVM", "Zadanie PvP", "ROZWÓJ PLANETY ", "ZADANIE IMPERIUM", "ZADANIE KLANOWE", "NAJLEPSZY KUCHA...", "REPUTACJA", "SYMBOL WYMIARÓW", "WYMIANA CHI", "ERMITA", "Nuda", "DOSTAWCA", "BOSKA MOC", "ROZGRZEWKA", "BOSKI ULEPSZACZ", "CZAS PODRÓŻNIKÓ...", "STRAŻNIK PORZĄD...", "CODZIENNY INSTY...", "HIPER SCALACZ", "DZIWNY MEDYK"];
+                let daily = ["ZADANIE PVM", "Zadanie PvP", "ROZWÓJ PLANETY", "ZADANIE IMPERIUM", "ZADANIE KLANOWE", "NAJLEPSZY KUCHA...", "REPUTACJA", "SYMBOL WYMIARÓW", "WYMIANA CHI", "ERMITA", "Nuda", "DOSTAWCA", "BOSKA MOC", "ROZGRZEWKA", "BOSKI ULEPSZACZ", "CZAS PODRÓŻNIKÓ...", "STRAŻNIK PORZĄD...", "CODZIENNY INSTY...", "HIPER SCALACZ", "DZIWNY MEDYK"];
                 daily = daily.map(item => item.trim().toLowerCase());
-                const lastSep3Element = $('.sep3').last().closest('.qtrack');
                 let markedQuests = [];
+                const questWithSep3 = document.querySelector('.sep3');
+                const lastSep3Element = $('.sep3').last().closest('.qtrack');
                 $('#quest_track_con .qtrack b').each(function () {
                     let zawartoscB = $(this).text().trim().toLowerCase();
                     if (daily.includes(zawartoscB) && !$(this).closest('.qtrack').find('.sep3').length) {
                         if (!markedQuests.includes(zawartoscB)) {
                             $(this).css("color", "#63aaff");
-                            lastSep3Element.after($(this).closest('.qtrack').clone());
+                            if (!$(this).closest('.qtrack').hasClass('cloned')) {
+                                if (questWithSep3) {
+                                    lastSep3Element.after($(this).closest('.qtrack').clone());
+                                } else {
+                                    $('#drag_con').prepend($(this).closest('.qtrack').clone());
+                                }
+                                $(this).closest('.qtrack').addClass('cloned');
+                            }
                             $(this).closest('.qtrack').remove();
                             markedQuests.push(zawartoscB);
                         }
@@ -995,6 +1003,35 @@ if (typeof GAME === 'undefined') { } else {
                 }
             }
             pvpKill() {
+                if (!JQS.chm.is(":focus")) {
+                    let opponents = $("#player_list_con").find(".player button" + "[data-quick=1]" + ":not(.initial_hide_forced)");
+                    if ($("button[data-option='load_more_players']").is(":visible")) {
+                        $("button[data-option='load_more_players']").click();
+                        setTimeout(() => {
+                            this.pvpKill();
+                        }, 110);
+                    } else if (opponents.length > 0) {
+                        opponents.eq(0).click();
+                        setTimeout(() => {
+                            this.pvpKill();
+                        }, 110);
+                    }
+                }
+            }
+            useCompressor() {
+                if (JQS.qcc.is(":visible")) {
+                    let compressors_button = $("#quest_con button[data-option=compress_items]");
+                    let quest_id = compressors_button.attr("data-qb_id");
+                    if (compressors_button.length === 1 && GAME.compress_items[0].stack > 0) {
+                        GAME.socket.emit('ga', {
+                            a: 22,
+                            type: 10,
+                            item_id: GAME.compress_items[0].id,
+                            qb_id: quest_id
+                        });
+                    }
+                }
+            }
                 if (!JQS.chm.is(":focus")) {
                     let opponents = $("#player_list_con").find(".player button" + "[data-quick=1]" + ":not(.initial_hide_forced)");
                     if ($("button[data-option='load_more_players']").is(":visible")) {
