@@ -1,283 +1,627 @@
-class ballReset {
-    constructor() {
-        this.synergy = 6;
-        this.hasStarted = false;
+klasa ballReset {
+    konstruktor() {
+        ta.synergy = 6;
+        this.hasStarted = fałsz;
         this.bonsCombinations = [];
-        this.css = ` #ballResetPanel { position: absolute; top: 35px; right: 10px; z-index: 9999999; width: 445px; padding: 5px; background: #303131bd; border: solid #ffffff7a 1px; border-radius: 5px; display: none; user-select: none; } #ballResetPanel .controller { display: flex; flex-direction: column; align-items: stretch; margin-bottom: 2px; } #ballResetPanel .controller button { font-weight: bolder; border:solid black 1px; cursor: pointer; } #ballResetPanel .controller button.green { background: lime; color: black !important; } #ballResetPanel .controller button.red { background: red; color: black !important; } #ballResetPanel .controller button:first-child { border-bottom:none; background: #afd4f5; } #ballResetPanel .controller button:disabled { opacity: 1; background: gray; cursor: not-allowed; } #ballResetPanel .ballCombination { background: #dfdfdc5c; padding: 5px; margin-bottom: 2px; } #ballResetPanel .ballCombination .combinationID { text-align: center; background: black; color: white; font-weight: bolder; font-size: 16px; padding: 1px; margin-bottom: 2px; } #ballResetPanel .ballCombination select { margin-bottom: 2px; background: #ffffff99; border: solid #6f6f6f 1px; border-radius: 5px; color: black; } #ballResetPanel .ballCombination select:last-child { margin-bottom: 0px; } `;
-        this.innerHTML = ` <div id="ballResetPanel"> <div class="controller"> <button class="addCombination">DODAJ NOWĄ KOMBINACJE</button> <button class="startSearching green">SZUKAJ</button> </div> <div class="combinations">${this.bonsCombination(1)}</div> </div> `;
-        $("body").append(`<style>${this.css}</style>${this.innerHTML}`);
-        $("body").on("click", "#ballResetPanel .addCombination", () => {
-            let lastID = parseInt($(".ballCombination:last").attr("combination"));
-            lastID++;
+        this.css = ` #ballResetPanel { pozycja: bezwzględna; góra: 35px; prawa: 10px; indeks z: 9999999; szerokość: 445px; wypełnienie: 5px; tło: #303131bd; obramowanie: pełne #ffffff7a 1px; promień obramowania: 5px; wyświetlanie: brak; wybór użytkownika: brak; } #ballResetPanel .controller { wyświetlanie: elastyczne; kierunek elastyczności: kolumna; wyrównanie elementów: rozciągnięcie; margines dolny: 2px; } #ballResetPanel .controller przycisk { grubość czcionki: pogrubienie; obramowanie: pełne czarne 1px; kursor: wskaźnik; } #ballResetPanel .controller przycisk.zielony { tło: limonkowy; kolor: czarny !ważne; } #ballResetPanel .controller przycisk.czerwony { tło: czerwony; kolor: czarny !ważne; } #ballResetPanel .controller button:first-child { border-bottom:none; background: #afd4f5; } #ballResetPanel .controller button:disabled { opacity: 1; background: gray; cursor: not-allowed; } #ballResetPanel .ballCombination { background: #dfdfdc5c; padding: 5px; margin-bottom: 2px; } #ballResetPanel .ballCombination .combinationID { text-align: center; background: black; color: white; font-weight: bolder; font-size: 16px; padding: 1px; margin-bottom: 2px; } #ballResetPanel .ballCombination select { margin-bottom: 2px; background: #ffffff99; border: solid #6f6f6f 1px; border-radius: 5px; color: black; } #ballResetPanel .ballCombination wybierz:last-child { margin-bottom: 0px; } `;
+        this.innerHTML = ` <div id="ballResetPanel"> <div class="controller"> <button class="addCombination">DODAJ NOWĄ KOMBINACJĘ</button> <button class="startSearching green">WYPRÓBUJ</button> </div> <div class="combinations">${this.bonsCombination(1)</div> </div> `;
+        
+        $("body").append(`<style>${this.css</style>${this.innerHTML}`);
+        $("body").on("kliknij", "#ballResetPanel .addCombination", () => {
+            niech lastID = parseInt($(".ballCombination:last").attr("kombinacja"));
+            ostatnieID++;
             $(".combinations").append(this.bonsCombination(lastID));
         });
         $("body").on("click", "#ballResetPanel .startSearching", () => {
-            this.controller();
+            ten.kontroler();
         });
-        $("body").on("click", `button[data-option="ss_page"][data-page="reset"]`, () => {
-            GAME.completeProgress = () => {
-                var res = GAME.progress;
-                switch (res.a) {
-                    case 45:
-                        if (res.ball) {
-                            GAME.parseData(55, res);
-                            if (this.hasStarted) {
-                                this.search(res);
+        $("body").on("kliknij", `button[data-option="ss_page"][data-page="resetuj"]`, () => {
+            GRA.completeProgress = () => {
+                var res = postęp gry;
+                przełącznik (res.a) {
+                    przypadek 45:
+                        jeśli (res.ball) {
+                            GRA.parseData(55, res);
+                            jeśli (this.hasStarted) {
+                                to.wyszukaj(res);
                             }
                         }
-                        break;
+                        przerwa;
                 }
-                delete GAME.progress;
+                usuń GAME.progress;
             }
+            jeśli(document.querySelector("#ss_name") i document.querySelector("#ss_name").textContent.trim() != "Anielska Kula Energii"){
             $("#ballResetPanel").show();
+        }
         });
         $("body").on("click", `button[data-option="ss_page"][data-page="upgrade"], #soulstone_interface .closeicon`, () => {
-            if (this.hasStarted) {
+            jeśli (this.hasStarted) {
                 $("#ballResetPanel .startSearching").click();
             }
-            $('.ss_stats tr').css("background", "transparent");
+            $('.ss_stats tr').css("tło", "przezroczyste");
             $("#ballResetPanel").hide();
             $("#ss_page_reset").hide();
         });
     }
-    controller() {
-        if (this.hasStarted) {
-            this.hasStarted = false;
-            $(".startSearching").removeClass("red").addClass("green").html("SZUKAJ");
-            $(".ballCombination select").prop("disabled", false);
-            $(".addCombination").prop("disabled", false);
-        } else {
-            this.hasStarted = true;
-            this.search();
-            $(".startSearching").removeClass("green").addClass("red").html("STOP");
-            $(".ballCombination select").prop("disabled", true);
-            $(".addCombination").prop("disabled", true);
+    kontroler() {
+        jeśli (this.hasStarted) {
+            this.hasStarted = fałsz;
+            $(".startSearching").removeClass("czerwony").addClass("zielony").html("SZUKAJ");
+            $(".ballCombination select").prop("wyłączone", false);
+            $(".addCombination").prop("wyłączone", false);
+        } w przeciwnym razie {
+            this.hasStarted = prawda;
+            to.szukaj();
+            $(".startSearching").removeClass("zielony").addClass("czerwony").html("STOP");
+            $(".ballCombination select").prop("wyłączone", prawda);
+            $(".addCombination").prop("wyłączone", prawda);
         }
     }
-    search(res = false) {
-        if (this.hasStarted) {
+    szukaj(res = false) {
+        jeśli (this.hasStarted) {
             this.bonsCombinations = this.prepareCombinations();
-            if (res) {
+            jeśli (res) {
                 this.ballActualBons = this.prepareBallBons(res);
-            } else {
+            } w przeciwnym razie {
                 this.ballActualBons = [0]
             }
-            if (!this.compare(this.ballActualBons, this.bonsCombinations)) {
-                GAME.socket.emit('ga', {
+            jeśli (!this.compare(this.ballActualBons, this.bonsCombinations)) {
+                GRA.socket.emit('ga', {
                     a: 45,
-                    type: 1,
-                    bid: GAME.ball_id
+                    typ: 1,
+                    oferta: GAME.ball_id
                 });
-            } else {
+            } w przeciwnym razie {
                 $(".startSearching").click();
             }
         }
     }
-    compare(pattern, others) {
-        const patternCounts = this.countOccurrences(pattern);
-        for (let i = 0; i < others.length; i++) {
-            const other = others[i];
-            const otherCounts = this.countOccurrences(other);
-            let isValid = true;
-            for (const [num, count] of Object.entries(otherCounts)) {
-                if (!patternCounts[num] || patternCounts[num] < count) {
+    porównaj(wzorzec, inne) {
+        const patternCounts = this.countOccurrences(wzorzec);
+        dla (let i = 0; i < others.length; i++) {
+            const inny = inni[i];
+            const otherCounts = this.countOccurrences(inne);
+            niech isValid = true;
+            dla (const [liczba, liczba] obiektu.wpisy(inneliczby)) {
+                jeśli (!wzorcoweLiczby[liczba] || wzorcoweLiczby[liczba] < liczba) {
                     isValid = false;
-                    break;
+                    przerwa;
                 }
             }
-            if (isValid) {
-                return true;
+            jeśli (isValid) {
+                zwróć wartość true;
             }
         }
-        return false;
+        zwróć fałsz;
     }
-    countOccurrences(array) {
-        const counts = {};
-        for (const num of array) {
-            counts[num] = (counts[num] || 0) + 1;
+    policzWystąpienia(tablica) {
+        const liczba = {};
+        dla (const liczba tablic) {
+            liczba[liczba] = (liczba[liczba] || 0) + 1;
         }
-        return counts;
+        liczba zwrotów;
     }
-    prepareBallBons(res) {
-        let ball = res.ball;
-        let bons = [];
-        $('.ss_stats tr').css("background", "transparent");
+    przygotujBons(res)BallBons {
+        niech ball = res.ball;
+        niech bony = [];
+        $('.ss_stats tr').css("tło", "przezroczyste");
         for (var s = 1; s <= 9; s++) {
-            if (ball['stat' + s] && this.bonsCombinations.some(array => array.includes(ball['stat' + s]))) {
-                bons.push(ball['stat' + s]);
-                $('#stat' + s + '_bon').parent().css("background", "#80008075");
+            jeśli (piłka['stat' + s] && this.bonsCombinations.some(tablica => tablica.includes(piłka['stat' + s]))) {
+                bons.push(piłka['stat' + s]);
+                $('#stat' + s + '_bon').parent().css("tło", "#80008075");
             }
         }
-        return bons;
+        bony zwrotne;
     }
-    prepareCombinations() {
-        let combinations = [];
-        $(".ballCombination").each((index, element) => {
-            let combination = [];
+    przygotujKombinacje() {
+        niech kombinacje = [];
+        $(".ballCombination").each((indeks, element) => {
+            niech kombinacja = [];
             $(element).find("select").each((idx, sel) => {
-                const value = parseInt($(sel).val());
-                if (value > 0) {
-                    combination.push(value);
+                stała wartość = parseInt($(sel).val());
+                jeśli (wartość > 0) {
+                    combination.push(wartość);
                 }
             });
-            if (combination.length > 0) {
-                combinations.push(combination);
+            jeśli (długość kombinacji > 0) {
+                kombinacje.push(kombinacja);
             }
         });
-        return combinations;
+        kombinacje zwrotne;
     }
-    bonsCombination(c) {
-        let innerHTML = `<div class="ballCombination" combination="${c}"><div class="combinationID">Kombinacja #${c}</div>`;
-        for (let i = 0; i < this.synergy; i++) {
-            innerHTML += `${this.listOfBons(c)}`;
+    kombinacjabons(c) {
+        niech innerHTML = `<div class="ballCombination" combination="${c}"><div class="combinationID">Kombinacja #${c}}`;
+        dla (let i = 0; i < this.synergy; i++) {
+            internalHTML += `${this.listOfBons(c)}`;
         }
         innerHTML += "</div>";
-        return innerHTML;
+        zwróć innerHTML;
     }
-    listOfBons() {
-        let innerHTML = ` <select> <option value="0">Brak</option> `;
+    listabonów() {
+        niech innerHTML = ` <select> <option value="0">Brak</option> `;
         this.allBons().forEach((obiekt) => {
-            innerHTML += `<option value="${obiekt.id}">${obiekt.bonus}</option>`;
+            internalHTML += `<opcja wartość="${obiekt.id}">${obiekt.bonus</option>`;
         });
         innerHTML += `</select>`;
-        return innerHTML;
+        zwróć innerHTML;
     }
-    allBons() {
-        return [{
-            id: 13,
-            bonus: '% do obrażeń'
+    wszystkie Bons() {
+        powrót [{
+            identyfikator: 13,
+            bonus: '% do awarii'
         }, {
-            id: 14,
-            bonus: '% do redukcji obrażeń'
+            identyfikator: 14,
+            bonus: '% do zmniejszenia limitu'
         }, {
-            id: 15,
-            bonus: '% do efektywności treningu'
+            identyfikator: 15,
+            premia: '% wykonywania treningu'
         }, {
-            id: 16,
-            bonus: '% do doświadczenia'
+            identyfikator: 16,
+            bonus: '% doświadczenia'
         }, {
-            id: 17,
-            bonus: '% do szansy na trafienie krytyczne'
+            identyfikator: 17,
+            bonus: '% czy szanse na trafienie krytyczne'
         }, {
-            id: 18,
-            bonus: '% do redukcji szansy na otrzymanie trafienia krytycznego'
+            identyfikator: 18,
+            bonus: '% do obniżenia szans na otrzymanie trafienia podstawowego'
         }, {
-            id: 51,
-            bonus: '% do obrażeń od technik'
+            identyfikator: 51,
+            bonus: '% dotrzymania od technika'
         }, {
-            id: 52,
-            bonus: '% redukcji obrażeń od technik'
+            identyfikator: 52,
+            bonus: '% ograniczenia od technika'
         }, {
-            id: 53,
-            bonus: '% do szansy na moc z walk PvM'
+            identyfikator: 53,
+            bonus: '% do ryzyka na moc z walk PvM'
         }, {
-            id: 54,
+            identyfikator: 54,
             bonus: '% do ilości mocy z walk PvM'
         }, {
-            id: 55,
-            bonus: '% do szansy na zdobycie przedmiotu z walk PvM'
+            identyfikator: 55,
+            premia: '% szans na wykonanie przedmiotu z walk PvM'
         }, {
-            id: 56,
-            bonus: 'minut(a) krótsze wyprawy'
+            identyfikator: 56,
+            bonus: 'minut(a) krótkie wyprawy'
         }, {
-            id: 57,
-            bonus: '% do szansy powodzenia wypraw'
+            identyfikator: 57,
+            bonus: '% do szansy na wyprawy'
         }, {
-            id: 58,
-            bonus: '% do szansy na ulepszenie przedmiotów'
+            identyfikator: 58,
+            bonus: '% do szansy na ulepszenie przez'
         }, {
-            id: 59,
-            bonus: '% do szansy na połączenie przedmiotów'
+            identyfikator: 59,
+            bonus: '% szans na połączenie'
         }, {
-            id: 60,
-            bonus: '% do obrażeń od trafień krytycznych'
+            identyfikator: 60,
+            bonus: '% do ryzyka od trafień krytycznych'
         }, {
-            id: 61,
-            bonus: '% redukcji obrażeń od trafień krytycznych'
+            identyfikator: 61,
+            bonus: '% ograniczenia trafień krytycznych'
         }, {
-            id: 62,
-            bonus: '% do mocy za wygrane walki wojenne'
+            identyfikator: 62,
+            bonus: '% mocy za wygrane walki wojenne'
         }, {
-            id: 63,
-            bonus: '% do skuteczności podpaleń'
+            identyfikator: 63,
+            bonus: '% do specjalnego podpaleń'
         }, {
-            id: 64,
-            bonus: '% do skuteczności krwawień'
+            identyfikator: 64,
+            bonus: '% do specjalnego krwawienia'
         }, {
-            id: 65,
-            bonus: '% do odporności na podpalenia'
+            identyfikator: 65,
+            bonus: '% do pokonania na podpalenia'
         }, {
-            id: 66,
-            bonus: '% do odporności na krwawienia'
+            identyfikator: 66,
+            premia: '% robi odporność na krwawienia'
         }, {
-            id: 67,
-            bonus: '% do szansy na zdobycie PSK'
+            identyfikator: 67,
+            bonus: '% do szans na wynik PSK'
         }, {
-            id: 68,
-            bonus: '% do punktów PvP za wygrane walki'
+            identyfikator: 68,
+            bonus: '% punktów PvP za wygrane walki'
         }, {
-            id: 69,
-            bonus: '% do szansy na 3x więcej punktów PvP za wygrane walki'
+            identyfikator: 69,
+            bonus: '% do szans na 3x więcej punktów PvP za wygrane walki'
         }, {
-            id: 70,
+            identyfikator: 70,
             bonus: '% do szansy na 3x więcej doświadczenia za wygrane walki PvM'
         }, {
-            id: 71,
+            identyfikator: 71,
             bonus: '% do mocy za skompletowanie SK'
         }, {
-            id: 72,
+            identyfikator: 72,
             bonus: '% do mocy za skompletowanie PSK'
         }, {
-            id: 73,
-            bonus: 'minut(y) do czasu trwania błogosławieństw'
+            identyfikator: 73,
+            premia: „minut(y) do czasu trwania postępowania”
         }, {
-            id: 74,
+            identyfikator: 74,
             bonus: '% do szansy na spotkanie legendarnych potworów'
         }, {
-            id: 75,
-            bonus: 'minut(y) krótszy cooldown między walkami PvP'
+            identyfikator: 75,
+            bonus: 'minuta(y) czasu odnowienia między walkami PvP'
         }, {
-            id: 76,
-            bonus: '% zwiększenie własnej szybkości'
+            identyfikator: 76,
+            premia: '% pośrednie własne'
         }, {
-            id: 77,
-            bonus: '% obniżenie szybkości przeciwnika'
+            identyfikator: 77,
+            premia: „% wyników końcowych”
         }, {
-            id: 78,
-            bonus: '% do szansy na zdobycie Niebieskiego Senzu'
+            identyfikator: 78,
+            bonus: '% do szans na trafienie Niebieskiego Senzu'
         }, {
-            id: 79,
-            bonus: '% mniejsze obrażenia od podpaleń'
+            identyfikator: 79,
+            premia: '% zmarłego od podpaleń'
         }, {
-            id: 80,
-            bonus: '% mniejsze obrażenia od krwawień'
+            identyfikator: 80,
+            premia: „% osoby chorej od krwawienia”
         }, {
-            id: 81,
-            bonus: '% do szansy na zdobycie Scoutera'
+            identyfikator: 81,
+            bonus: '% czy szanse na Scoutera'
         }, {
-            id: 91,
+            identyfikator: 91,
             bonus: '% do wtajemniczenia'
         }, {
-            id: 99,
-            bonus: '% większy limit dzienny Niebieskich Senzu'
+            identyfikator: 99,
+            bonus: '% większy limit dziennych niebieskich senzu'
         }, {
-            id: 139,
-            bonus: '% do ilości zdobywanych kryształów instancji'
+            identyfikator: 139,
+            premia: '% dodawanych ilości uzyskanych w wyniku'
         }, {
-            id: 140,
-            bonus: '% do przyrostu Punktów Akcji'
+            identyfikator: 140,
+            bonus: '% do straty Punktów Akcji'
         }, {
-            id: 154,
-            bonus: '% do sławy za walki w wojnach imperiów'
+            identyfikator: 154,
+            bonus: '% do sławy za walki w wojnach imperiaów'
         }, {
-            id: 160,
+            identyfikator: 160,
             bonus: '% do boskiego atrybutu przewodniego'
         }, {
-            id: 163,
+            identyfikator: 163,
             bonus: '% więcej Boskiej Ki za CSK'
         }, {
-            id: 171,
+            identyfikator: 171,
             bonus: '% do max Punktów Akcji'
         }];
     }
 }
+
+klasa pet_bonch {
+    konstruktor() {
+        to.petCSS = `
+            #bonusMenu {wyświetlanie: brak; pozycja: absolutna; góra: 80px; prawa: 5px; wypełnienie: 10px; tło: rgba(48, 49, 49, 0.8); obramowanie: pełne #ffffff7a 1px; promień obramowania: 5px; indeks z: 10;}
+            #bonusMenu div {kolor: #ffffff; rozmiar czcionki: 16px; grubość czcionki: pogrubiona; margines dolny: 10px; wyrównanie tekstu: do środka; }
+            #bonusMenu wybierz {margines: 5px 0; tło: #ffffff99; obramowanie: pełne #6f6f6f 1px; promień obramowania: 5px; kolor: czarny; wyświetlanie: blok; szerokość: 100%;}
+            .startButton {wyświetlacz: blok; margines: 8px auto;}
+            .stopButton {wyświetlanie: blok; margines: 8px auto; margines-dolny: 1ch;}`;
+        ten.petHTML = `
+            <div id="bonusMenu">
+                <div><b>Wybierz bonus:</b></div>
+                ${this.generateBonusSelects(4)}
+                <div><b>Wybierz ID Peta:</b></div>
+                <select id="petIdSelect">${this.generatePetOptions()</select>
+                <button class="newBtn startButton">Rozpocznij</button>
+                <button class="newBtn stopButton">ZAMKNIJ</button>
+            </div>`;
+        this.isPetBonchActive = false;
+        this.petInterval = null;
+
+        to.inicjalizuj();
+    }
+
+    zainicjuj() {
+        to.attachButtonEvent();
+        this.attachStartEvent();
+        this.attachStopEvent();
+    }
+
+    generujBonusSelects(liczba) {
+        niech opcje = `
+            <option value="0">Hamulec</option>
+            <option value="1">% do siły</option>
+            <option value="2">% do szybkości</option>
+            <option value="3">% do wytrzymałości</option>
+            <option value="4">% do siły woli</option>
+            <option value="5">% energii ki</option>
+            <option value="6">% do wszystkich statystyk</option>
+            <option value="7">% do treningu treningu</option>
+            <option value="8">% do rezultatu treningu</option>
+            <option value="9">% do szansy na podwójnie skuteczny bonus za ulepszenie treningu</option>
+            <option value="10">% do max Punktów Akcji</option>
+            <option value="11"> do pozostałościu Punktów Akcji</option>
+            <option value="12">% do przyrostu punktów Akcji</option>
+            <option value="13">% do doświadczenia</option>
+            <option value="14">% do szans na wykonanie przedmiotu z walk PvM</option>
+            <option value="15">% do ilości mocy z walk PvM</option>
+            <option value="16">% szans na walkę z walką PvM</option>
+            <option value="17">% do mocy za skompletowanie SK</option>
+            <option value="18">% do mocy za skompletowanie PSK</option>
+            <option value="19">% mocy za wygrane walki wojenne</option>
+            <option value="20">% do odbioru</option>
+            <option value="21">% do odbiornika od technika</option>
+            <option value="22">% do utraty trafień krytycznych</option>
+            <option value="23">% do zmniejszenia ograniczenia</option>
+            <option value="24">% ograniczenia ograniczenia od technika</option>
+            <option value="25">% redukcji szans na uzyskanie trafienia podstawowego</option>
+            <option value="26">% ograniczenia utraty trafień krytycznych</option>
+            <option value="27">% szans na trafienie bezpłatne</option>
+            <option value="28">% zwiększa ryzyko krwawienia</option>
+            <option value="29">% do usuwania krwawień</option>
+            <option value="30">% do pokonania na podpalenia</option>
+            <option value="31">% do specjalnego podpalenia</option>
+        `;
+        niech wybierze = "";
+        dla (let i = 0; i < liczba; i++) {
+            wybiera += `<select>${opcje}</select>`;
+        }
+        zwróć wybiera;
+    }
+
+    generujOpcjeZwierząt() {
+        niech opcje = '';
+        dla (let i = 1; i <= 100; i++) {
+            opcje += `<option value="${i}">Zwierzak ${i</option>`;
+        }
+        opcje zwrotu;
+    }
+
+    dołączZdarzeniePrzycisku() {
+        $("body").on("kliknij", 'przycisk[data-option="pet_bonch"]', () => {
+            jeśli (!$("#bonusMenu").length) {
+                $("body").append(`<style>${this.petCSS}</style>${this.petHTML}`);
+            }
+
+            ustawCzasOkres(() => {
+                jeśli ($(".pet-number").length === 0) {
+                    const petItems = document.querySelectorAll('.petItem');
+                    petItems.forEach((petItem, index) => {
+                        const numberLabel = document.createElement('div');
+                        numberLabel.classList.add('numer-zwierzaka');
+                        numberLabel.textContent = `Zwierzę #${index + 1}`;
+                        numberLabel.style.fontWeight = 'pogrubiony';
+                        numberLabel.style.marginBottom = '5px';
+                        petItem.prepend(liczbaEtykiet);
+                    });
+                }
+                this.isPetBonchActive = false;
+                $("#bonusMenu").toggle();
+            }, 333);
+        });
+    }
+
+    dołączStartEvent() {
+        $("body").on("kliknij", '.startButton', () => {
+            this.isPetBonchActive = prawda;
+            const selectedOptions = Array.from($('#bonusMenu select').not('#petIdSelect'))
+                .mapa(wybierz => {
+                    const value = select.value;
+                    const optionText = select.options[select.selectedIndex].text;
+                    wartość zwracana !== "0" ? optionText : null;
+                })
+                .filter(opcja => opcja !== null);
+
+            const checkAndSendData = () => {
+                const container = document.querySelector("#kom_con > div > div.content > div");
+                const greenTextValues ​​= Array.from(container.querySelectorAll("b.green")).map(el => {
+                    powrót el.nextRodzeństwo ? el.nextSibling.textContent.trim() : "";
+                });
+
+                const allMatch = selectedOptions.every(opcja => greenTextValues.includes(opcja));
+                const iloscKarmy = parseInt($("#ilosc_karm").text(), 10);
+
+                jeśli (iloscKarmy === 0) {
+                    this.isPetBonchActive = false;
+                    console.log("Brak Karmy.");
+                }
+
+                jeśli (this.isPetBonchActive) {
+                    jeśli (wszystkie dopasowania) {
+                        console.log("Wszystkie wartości wybrane spośród:", wybraneOpcje);
+                        clearInterval(ten.petInterval);
+                        this.isPetBonchActive = false;
+                    } w przeciwnym razie {
+                        console.log("Brak pełnego dopasowania, ponawiam próbę...");
+                        const petId = $('#petIdSelect').val();
+                        const button = document.querySelector(`#pet_list > div:nth-child(${petId}) > div.rightSide > div > button:nth-child(2)`);
+                        const petId2 = przycisk.getAttribute("data-pet");
+                        GRA.socket.emit('ga', { a: 43, typ: 7, zwierzak: petId2 });
+                        kom_clear();
+                    }
+                } w przeciwnym razie {
+                    clearInterval(ten.petInterval);
+                }
+            };
+
+            this.petInterval = setInterval(checkAndSendData, 2000);
+        });
+    }
+
+    dołączStopEvent() {
+        $("body").on("kliknij", '.stopButton', () => {
+            $("#bonusMenu").hide();
+            this.isPetBonchActive = false;
+        });
+    }
+}
+
+        klasa anielskaResetuj {
+            konstruktor() {
+                to.anielskaCSS = `
+                    #AnielskaMenu {wyświetlanie: brak; pozycja: absolutna; góra: 80px; prawa: 5px; wypełnienie: 10px; tło: rgba(48, 49, 49, 0.8); obramowanie: pełne #ffffff7a 1px; promień obramowania: 5px; indeks z: 10;}
+                    #AnielskaMenu div {kolor: #ffffff; rozmiar czcionki: 16px; grubość czcionki: pogrubiona; margines dolny: 10px; wyrównanie tekstu: do środka; }
+                    #AnielskaMenu wybierz {margines: 5px 0; margines dolny: 2ch; tło: #ffffff99; obramowanie: pełne #6f6f6f 1px; promień obramowania: 5px; kolor: czarny; wyświetlanie: blok; szerokość: 100%;}
+                    .startAnielska {wyświetlacz: blok; margines: 8px auto;}
+                    .stopAnielska {wyświetlanie: blok; margines: 8px auto; margines-dolny: 1ch;}`;
+                to.anielskaHTML = `
+                    <div id="AnielskaMenu">
+                        <div><b>Wybierz ustawienia Anielskiej Kuli:</b></div>
+                        ${this.generateAnielskaSelects(5)}
+                        <button class="newBtn startAnielska">Start</button>
+                        <button class="newBtn stopAnielska">ZAMKNIJ</button>
+                    </div>`;
+                this.isAnielskaActive = false;
+                this.anielskaInterval = null;
+        
+                to.inicjalizuj();
+            }
+        
+            zainicjuj() {
+                this.attachResetEvent();
+                this.attachStartEvent();
+                this.attachStopEvent();
+            }
+        
+            generujAnielskaSelects(liczba){
+                niech opcje = `<option value="0">Brak</option>
+                 <option value="1">10% do boskiego atrybutu przewodniego</option>
+                 <option value="2">15% do boskiego atrybutu przewodniego</option>
+                 <option value="3">150% doświadczenia</option>
+                 <option value="4">200% doświadczenia</option>
+                 <option value="5">150% treningu treningu</option>
+                 <option value="6">200% treningu treningu</option>
+                 <option value="7">75% mocy z walk PvM</option>
+                 <option value="8">100% mocy z walk PvM</option>
+                 <option value="9">75% dodawanych do ilości kryształów</option>
+                 <option value="10">100% do ilości uzyskanych kryształów przeznaczonych</option>
+                 <option value="11">30% do maks. Punktów Akcji</option>
+                 <option value="12">35% do max Punktów Akcji</option>
+                 <option value="13">40% do uzupełnienia</option>
+                 <option value="14">45% do uzupełnienia</option>
+                 <option value="15">40% do odbiornika od technika</option>
+                 <option value="16">45% do odbiornika od technika</option>
+                 <option value="17">30% do przyrostu punktów Akcji</option>
+                 <option value="18">35% do przyrostu punktów Akcji</option>
+                 <option value="19">40% do ograniczenia ograniczenia</option>
+                 <option value="20">45% do ograniczenia ograniczenia</option>
+                 <option value="21">40% do sławy za walkę w wojnach imperiów</option>
+                 <option value="22">45% do sławy za walkę w wojnach imperiów</option>
+                 <option value="23">15% zrób ryzyko na 3x więcej doświadczenia za wygrane walki PvM</option>
+                 <option value="24">20% na ryzyko na 3x więcej doświadczenia za wygrane walki PvM</option>
+                 <option value="25">9% szans na połączenie</option>
+                 <option value="26">12% szans na połączenie</option>
+                 <option value="27">9% to szansa na spotkanie legendarnych potworów</option>
+                 <option value="28">12% to szansa na spotkanie legendarnych potworów</option>
+                 <option value="29">9% szans na ulepszenie</option>
+                 <option value="30">12% to szansa na ulepszenie</option>
+                 <option value="31">9% szans na wykonanie przedmiotu z walk PvM</option>
+                 <option value="32">12% to szanse na wynik z walk PvM</option>
+                 <option value="33">9% to szanse na wynik PSK</option>
+                 <option value="34">12% to szanse na wynik PSK</option>
+                 <option value="35">3% to szansa na wynik CSK</option>
+                 <option value="36">5% szans na wynik CSK</option>
+                 <option value="37">15% do wtajemniczenia</option>
+                 <option value="38">20% do wtajemniczenia</option>
+                 <option value="39">40% ograniczenia odbiornika od technika</option>
+                 <option value="40">45% ograniczenia odbiornika od technika</option>
+                 <option value="41">9% szans na moc z walką PvM</option>
+                 <option value="42">12% na ryzyko na moc z walk PvM</option>
+                 <option value="43">10% większego limitu dziennego Niebieskich Senzu</option>
+                 <option value="44">15% większego limitu dziennego Niebieskich Senzu</option>
+                 <option value="45">4% większego mnożnika SSJ</option>
+                 <option value="46">6% większego mnożnika SSJ</option>
+                 <option value="47">10% redukcji skutków czasowych</option>
+                 <option value="48">12% redukcji skutków czasowych</option>
+                 <option value="49">75 minut do czasu trwania Błogosławieństw</option>
+                 <option value="50">100 minut do czasu trwania Błogosławieństw</option>
+                 <option value="51">12 minut(y) czasu odnowienia między walkami PvP</option>
+                 <option value="52">15 minut(y) czasu odnowienia między walkami PvP</option>
+                 <option value="53">50% większej ilości boskiego atrybutu przewodniego z walk PvM</option>
+                 <option value="54">60% większej ilości boskiego atrybutu przewodniego z walk PvM</option>
+                 <option value="55">2% stanowi szansę na ulepszenie każdego M-borna</option>
+                 <option value="56">4% stanowi szansę na ulepszenie każdego M-borna</option>
+                 <option value="57">5% do rezultatu treningu</option>
+                 <option value="58">10% do rezultatu treningu</option>
+                 <option value="59">2% do szansy na podwójnie skuteczny bonus za ulepszenie treningu</option>
+                 <option value="60">3% do szansy na podwójnie skuteczny bonus za ulepszenie treningu</option>
+                 <option value="61">3% większa szansa na boski atrybut bohatera podczas walk PvM</option>
+                 <option value="62">5% większej szansy na boski atrybut bohatera podczas walk PvM</option>
+                 <option value="63">5% do wszystkich statystyk</option>
+                 <option value="64">10% % do wszystkich statystyk</option>
+                 <option value="65">4% większa szansa na pomyślne zebranie zasobu</option>
+                 <option value="66">6% większej szansy na pomyślne zebranie zasobu</option>
+                 `;
+                niech wybierze = '';
+                dla (let i = 0; i < liczba; i++) {
+                    wybiera += `<select>${opcje}</select>`;
+                }
+                zwróć wybiera;
+            }
+        
+            dołączResetEvent() {
+                $("body").on("kliknij", 'przycisk[data-option="ss_page"][data-page="resetuj"]', () => {
+                    jeśli (document.querySelector("#ss_name") && document.querySelector("#ss_name").textContent.trim() === "Anielska Kula Energii") {
+                        jeśli ($("#ballResetPanel").length) {
+                            ustawCzasOkres(() => {
+                                document.querySelector("#ballResetPanel").style.display = "brak";
+                            }, 500);
+                        }
+                        if (!$("#AnielskaMenu").length) {
+                            $("body").append(`<style>${this.anielskaCSS</style>${this.anielskaHTML}`);
+                            console.log("#AnielskaMenu Wczytano.");
+                        }
+                        ustawCzasOkres(() => {
+                            this.isAnielskaActive = false;
+                            $("#AnielskaMenu").toggle();
+                        }, 333);
+                    }
+                });
+            }
+        
+            dołączStartEvent() {
+                $("body").on("kliknij", '.startAnielska', () => {
+                    this.isAnielskaActive = prawda;
+                    const selectedOptions2 = Array.from($('#AnielskaMenu select'))
+                        .mapa(wybierz => {
+                            const value = select.value;
+                            const optionText = select.options[select.selectedIndex].text;
+                            jeśli (wartość !== "0" && parseInt(wartość, 10) % 2 !== 0) {
+                                const nextEvenValue = parseInt(wartość, 10) + 1;
+                                const nextEvenText = wybierz.opcje[wybierz.selectedIndex + 1]?.tekst;
+                                zwróć [tekst_opcji, następny_tekst_parzysty].filtr(Boolean);
+                            }
+                            wartość zwracana !== "0" ? [tekst_opcji] : null;
+                        })
+                        .filter(opcja => opcja !== null);
+        
+                    const checkAndSendData2 = () => {
+                        const table = document.querySelector("table.ss_stats");
+                        const statBonValues ​​= Array.from(table.querySelectorAll("td[id^='stat'][id$='_bon']"))
+                            .map(td => td.zawartośćtekstowa.trim())
+                            .filter(wartość => wartość !== "");
+        
+                        const statValValues ​​= Array.from(table.querySelectorAll("b[id^='stat'][id$='_val']"))
+                            .map(b => b.zawartośćtekstowa.trim())
+                            .filter(wartość => wartość !== "");
+        
+                        const combinedValues ​​= statValValues.map((val, index) => `${val}${statBonValues[index]}`);
+                        console.log(wartościpołączone);
+                        console.log(selectedOptions2);
+        
+                        const toCheck = selectedOptions2.filter(opcje => {
+                            zwróć !options.some(opcja => combinedValues.includes(opcja));
+                        });
+        
+                        jeśli (toCheck.length === 0) {
+                            jeśli (this.isAnielskaActive) {
+                                console.log("Wszystkie wartości wybrane spośród:", wybraneOpcje2);
+                                clearInterval(this.anielskaInterval);
+                            } w przeciwnym razie {
+                                clearInterval(this.anielskaInterval);
+                            }
+                        } w przeciwnym razie {
+                            console.log("Brak pełnego dopasowania, ponawiam próbę...");
+                            GRA.socket.emit('ga', { a: 45, typ: 1, licytacja: GRA.ball_id });
+                        }
+                    };
+        
+                    this.anielskaInterval = setInterval(checkAndSendData2, 1500);
+                });
+            }
+        
+            dołączStopEvent() {
+                $("body").on("kliknij", '.stopAnielska', () => {
+                    $("#AnielskaMenu").hide();
+                    this.isAnielskaActive = false;
+                    clearInterval(this.anielskaInterval);
+                });
+            }
+        }
